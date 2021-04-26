@@ -37,14 +37,6 @@ def read_data_file(num):
     
     return(data, meta)
 
-def clean_column_name(columns):
-
-    result = []
-    
-    for col in columns:
-        
-        result.append()
-
 data, meta = read_data_file(0)
 
 # columns description
@@ -54,17 +46,13 @@ columns = pd.DataFrame({'variable':meta.column_names, 'label':meta.column_labels
 fakedata = data.rename(columns = {'IDENT' : 'ID',
                                   'DATE' : 'TIME' })
 # column used as identifier
-columns_id = ['NUMQUEST', 'IDENT', 'ENQU', 'Hors_NK', 'MOUGHATAA', 'COMMUNE',
-              'VILLAG0', 'VILLAGE', 'MILIEU', 'NUMEN', 'DATE',
+columns_id = ['Q_10_NUMQUEST', 'IDENT', 'ENQU', 'Hors_NK', 'Q_12_Moughataa', '13_Commune',
+              'VILLAG0', 'VILLAGE', 'Q_15_MILIEU', 'NUMEN', 'DATE',
               'CDATSAISIE', 'CODE_ENQ', 'CODE_CONT', ]
-
-# check spelling
-for col in columns_id:
     
-
 # variable of interest
 columns_value = [col for col in data.columns if col not in columns_id]
-columns_value += ['FCS', 'CSI']
+columns_value = ['FCS', 'CSI']
 
 df = pd.melt(data, id_vars=columns_id, value_vars=columns_value)
 df = df.merge(columns, on = 'variable', how='left')
