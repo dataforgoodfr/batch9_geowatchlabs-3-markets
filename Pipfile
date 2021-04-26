@@ -9,6 +9,10 @@ numpy = "*"
 matplotlib = "*"
 pyreadstat = "*"
 black = "==19.3b0"
+Fiona = "==1.8.18"
+GDAL = "==3.2.2"
+geopandas = "==0.8.2"
+Rtree = "==0.9.7"
 
 [dev-packages]
 
