@@ -46,8 +46,8 @@ columns = pd.DataFrame({'variable':meta.column_names, 'label':meta.column_labels
 fakedata = data.rename(columns = {'IDENT' : 'ID',
                                   'DATE' : 'TIME' })
 # column used as identifier
-columns_id = ['NUMQUEST', 'IDENT', 'ENQU', 'Hors_NK', 'MOUGHATAA', 'COMMUNE',
-              'VILLAG0', 'VILLAGE', 'MILIEU', 'NUMEN', 'DATE',
+columns_id = ['Q_10_NUMQUEST', 'IDENT', 'ENQU', 'Hors_NK', 'Q_12_Moughataa', '13_Commune',
+              'VILLAG0', 'VILLAGE', 'Q_15_MILIEU', 'NUMEN', 'DATE',
               'CDATSAISIE', 'CODE_ENQ', 'CODE_CONT', ]
     
 # variable of interest
