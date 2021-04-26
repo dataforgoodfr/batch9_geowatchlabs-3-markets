@@ -41,5 +41,13 @@ if __name__ == "__main__":
     geojson_1 = "asset/2015_birth.geojson"
     geojson_2 = "asset/2015_population.geojson"
     geojson_3 = "asset/subset_S3B_OL_2_LFR____20210421T103548_20210421T103848_20210422T155447_0179_051_279_2520_LN1_O_NT_002.geojson"
-
-    convert_tiff_to_geojson(os.getcwd() + tiff_1, geojson_1, 1)
+    for file in os.listdir("asset/tiff"):
+        print("Conversion of "+file+" starting ...")
+        try:
+            if file.replace("tiff","geojson") not in os.listdir("asset/geojson"):
+                tiff_path = os.getcwd()+"asset/tiff/"+file
+                geojson_path = tiff_path.replace("tiff","geojson")
+                convert_tiff_to_geojson(tiff_path, geojson_path, 1)
+                print("Conversion of "+file+" successful !")
+        except Exception as e:
+            print("Couldn't convert file "+file+", exception :"+e.__str__())
