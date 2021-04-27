@@ -21,6 +21,21 @@ Study the relationship between food price and food insecurity in Mauritania.
 
 ### Data sources
 
+Make sure to have `Mauritania FSMS data.zip` in your `$HOME`. The directory `Mauritania FSMS data` looks like this : 
+
+```
+Mauritania FSMS data
+├── year
+│    ├── monthYY
+│    │     ├── data.sav
+│    │     ├── pdf_1
+│    │     └── pdf_2
+[...]
+```
+
+We will here use the `.sav` files for our analysis. The script `Mauritania_FSMS_aggregation.py` aims at normalizing 
+the data in this folder.
+
 ### Scores
 
 ## Getting started
