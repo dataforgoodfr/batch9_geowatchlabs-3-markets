@@ -49,7 +49,7 @@ def get_list_of_data_files():
 def convert_data(file):
     try:
         # read data
-        data, meta =  pyreadstat.read_sav(file, apply_value_formats=True)
+        data, meta =  pyreadstat.read_sav(file, apply_value_formats=True, encoding="ISO-8859-1")
         return data, meta
     except:
         print("Need to investigate ",file)
