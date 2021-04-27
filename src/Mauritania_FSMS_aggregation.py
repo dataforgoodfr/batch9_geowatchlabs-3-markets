@@ -23,7 +23,7 @@ def unzip_data():
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "Mauritania FSMS data")
 
     zip_file = os.path.join(current_directory, correct_zip_file[-1])
-    root_folder = os.path.join(current_directory, "Mauritania FSMS data.zip")
+    root_folder = os.path.join(current_directory, "Mauritania FSMS data%%%%.zip")
 
     # unzip file
     if not os.path.exists(root_folder):
@@ -49,7 +49,7 @@ def get_list_of_data_files():
 def convert_data(file):
     try:
         # read data
-        data, meta =  pyreadstat.read_sav(file, apply_value_formats=True, encoding="ISO-8859-1")
+        data, meta =  pyreadstat.read_sav(file, apply_value_formats=True)
         return data, meta
     except:
         print("Need to investigate ",file)
@@ -60,11 +60,10 @@ def clean_name(name):
     name_lowercase = name.lower()
     relevant_words = re.findall(r'[a-z]+', name_lowercase)
 
-    #remove "q"
-    if 'q' in relevant_words:
-        relevant_words.remove('q')
+    #remove one letter words
+    relevant_words = [word for word in relevant_words if len(word) > 1]
 
-    relevant_sentence = "".join(relevant_words)
+    relevant_sentence = " ".join(relevant_words)
     return relevant_sentence
 
 def get_best_candidate_with_levenshtein_distance(match_name, candidates_name):
@@ -81,18 +80,13 @@ def perfect_match_index(match_name, candidates_name):
 
 ############################ Looping functions ############################
 
-def enumerate_column_names_loop(column_names_clean, label_clean, all_column_names, all_label_names):
-    for column in column_names_clean:
-        if column in all_column_names.keys():
-            all_column_names[column] += 1
+def enumerate_column_names_loop(column_clean, all_column):
+    for i in range(len(column_clean)):
+        key = column_clean[i]
+        if key in all_column.keys():
+            all_column[key] += 1
         else:
-            all_column_names[column] = 1
-
-    for label in label_clean:
-        if label in all_label_names.keys():
-            all_label_names[label] += 1
-        else:
-            all_label_names[label] = 1
+            all_column[key] = 1
 
 def show_best_match_loop(column_names_clean, relevant_columns_cleaned, data_file_name, best_match):
     best_match.loc[data_file_name] = [get_best_candidate_with_levenshtein_distance(col, column_names_clean) for col in relevant_columns_cleaned]
@@ -103,7 +97,6 @@ def show_matching_column_loop(data, column_names_clean, data_file_name, relevant
     temp = data[perfect_match_columns]
     temp.columns = [column_names_clean[id] for id in perfect_match_indexes if not id is None]
     return temp
-
 
 def show_matching_column_moments_loop(data, column_names_clean, data_file_name, column_names):
     perfect_match_indexes = [perfect_match_index(col, column_names_clean) for col in relevant_columns_cleaned]
@@ -135,8 +128,8 @@ relevant_columns_cleaned = [clean_name(col) for col in relevant_columns if not c
 best_match = pd.DataFrame(data = [], columns=relevant_columns_cleaned)
 match = pd.DataFrame(data = [], columns=relevant_columns_cleaned)
 match_moments = pd.DataFrame(data = [], columns=["variable", "Path", "Mean", "Min", "Q1", "Median" "Q3", "Max"])
-all_column_names = {}
-all_label_names = {}
+all_column = {}
+label_name={}
 
 for data_file_index in range(len(data_files_list)):
 
@@ -152,10 +145,11 @@ for data_file_index in range(len(data_files_list)):
 
         column_names_clean = [clean_name(col) for col in column_names if not col is None]
         column_label_clean = [clean_name(col) for col in label_names if not col is None]
+        column_clean = [clean_name(column_names[i]) + ";" + clean_name(label_names[i]) for i in range(len(label_names)) if not label_names[i] is None and not column_names[i] is None]
 
         ### You can comment if not necessary
-        #enumerate_column_names_loop(column_names_clean, column_label_clean, all_column_names, all_label_names)
-        #show_best_match_loop(column_names_clean, relevant_columns_cleaned, data_file_name, best_match)
+        enumerate_column_names_loop(column_clean, all_column)
+        show_best_match_loop(column_names_clean, relevant_columns_cleaned, data_file_name, best_match)
         match = match.append(show_matching_column_loop(data, column_names_clean, data_file_name, relevant_columns_cleaned,column_names))
         match_moments = match_moments.append(show_matching_column_moments_loop(data, column_names_clean, data_file_name, column_names))
 
@@ -164,9 +158,12 @@ print("There are ",len(data_files_list) - nb_valid_files," issues with files")
 
 print("------------- exporting results -----------")
 
-if all_column_names:
-    pd.DataFrame.from_dict(all_column_names, orient='index').to_csv("all_column_names.csv")
-    pd.DataFrame.from_dict(all_label_names, orient='index').to_csv("all_label_names.csv")
+if all_column:
+    df = pd.DataFrame.from_dict(all_column, orient='index')
+    df = df.reset_index().rename(columns={0 : 'Nb', 'index': 'key'})
+    df[['Name','Label']] = df.key.str.split(";",expand=True,)
+    df = df.drop(["key"], axis=1)
+    df.to_csv("all_column_in_FSMS_files.csv", sep=";")
 
 if not best_match.empty:
     best_match.to_csv("best_match_column_names.csv", sep=";")
