@@ -46,10 +46,15 @@ the data in this folder.
 
 #### Prices
 
-- https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic
-- https://api.foodsecurityportal.org/organization/food-security-portal
-- FAO prices in Africa (cf .zip sent by Hadrien)
+Here are the different pricing sources that we've collected so far :
 
+| link  | type of data  | frequency  | geographic level  | who added this link |
+|---|---|---|---|---|
+| [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |   |   | Thibaut  |
+| [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |   |   | Simon  |
+| [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |   | yearly  | country  | Hadrien  |
+
+<u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
 
 ### Scores
 
