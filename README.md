@@ -17,9 +17,12 @@
 
 ### Goal
 
-Study the relationship between food price and food insecurity in Mauritania.
+Study the relationship between food price and food insecurity in Mauritania. 
 
 ### Data sources
+
+
+#### FSMS
 
 Make sure to have `Mauritania FSMS data.zip` in your `$HOME`. The directory `Mauritania FSMS data` looks like this : 
 
@@ -35,6 +38,18 @@ Mauritania FSMS data
 
 We will here use the `.sav` files for our analysis. The script `Mauritania_FSMS_aggregation.py` aims at normalizing 
 the data in this folder.
+
+#### Geospatial
+
+- GeoJSON of the studied zone
+- .tiff : births, population, roads, railways ... (uploaded by Simon on the Google Drive)
+
+#### Prices
+
+- https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic
+- https://api.foodsecurityportal.org/organization/food-security-portal
+- FAO prices in Africa (cf .zip sent by Hadrien)
+
 
 ### Scores
 
