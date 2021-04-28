@@ -8,13 +8,16 @@
   - [Goal](#goal)
   - [Data sources](#data-sources)
   - [Scores](#scores)
-- [Getting started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Create your pipenv](#create-your-pipenv)
 - [Data exploration](#data-exploration)
   - [FSMS](#fsms)
   - [Geospatial data](#geospatial-data)
   - [Prices](#prices)
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Create your pipenv](#create-your-pipenv)
+
+____________________________________________________________________
+
 
 ## About the project
 
@@ -49,44 +52,7 @@ See [Data exploration](#data-exploration) for more information.
 
 ### Scores
 
-## Getting started
-
-
-### Prerequisites
-
--   Python 3.9 (or more recent)
--   [pipenv](https://pypi.org/project/pipenv/)
-
-### Create your pipenv
-
-Open your terminal, and install pipenv with:
-```shell
-pip install pipenv
-```
-
-Then, from the `src` directory, type:
-```shell
-pipenv install
-```
-
-This will create the virtualenv for this project, with the correct packages and versions.
-
-Then type:
-```shell
-pipenv shell
-```
-
-To activate the virtualenv. And that's all !
-
-**<u>WARNING :</u>**
-When installing a package, you now have to use `pipenv install` instead of `pip install`. 
-Once you've installed all you needed, you type `pipenv update`. It will update the `Pipfile`.
-
-**<u>NB :</u>**
-If you're using Pycharm, there are some extensions to use `pipenv` directly from your IDE.
-
-
-
+____________________________________________________________________
 
 ## Data exploration
 
@@ -127,3 +93,44 @@ Here are the different pricing sources that we've collected so far :
 The column "indice" represent the pricing indice that can be computed with this data source (CPI, price of a typical food basket, price of basic food ...)
 
 <u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
+
+
+
+____________________________________________________________________
+
+## Getting started
+
+
+### Prerequisites
+
+-   Python 3.9 (or more recent)
+-   [pipenv](https://pypi.org/project/pipenv/)
+
+### Create your pipenv
+
+Open your terminal, and install pipenv with:
+```shell
+pip install pipenv
+```
+
+Then, from the `src` directory, type:
+```shell
+pipenv install
+```
+
+This will create the virtualenv for this project, with the correct packages and versions.
+
+Then type:
+```shell
+pipenv shell
+```
+
+To activate the virtualenv. And that's all !
+
+**<u>WARNING :</u>**
+When installing a package, you now have to use `pipenv install` instead of `pip install`. 
+Once you've installed all you needed, you type `pipenv update`. It will update the `Pipfile`.
+
+**<u>NB :</u>**
+If you're using Pycharm, there are some extensions to use `pipenv` directly from your IDE.
+
