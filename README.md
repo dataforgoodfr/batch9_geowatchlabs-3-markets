@@ -22,7 +22,7 @@ Study the relationship between food price and food insecurity in Mauritania.
 ### Data sources
 
 
-#### FSMS
+#### 1. FSMS
 
 Make sure to have `Mauritania FSMS data.zip` in your `$HOME`. The directory `Mauritania FSMS data` looks like this : 
 
@@ -39,20 +39,22 @@ Mauritania FSMS data
 We will here use the `.sav` files for our analysis. The script `Mauritania_FSMS_aggregation.py` aims at normalizing 
 the data in this folder.
 
-#### Geospatial
+#### 2. Geospatial
 
 - GeoJSON of the studied zone
 - .tiff : births, population, roads, railways ... (uploaded by Simon on the Google Drive)
 
-#### Prices
+#### 3. Prices
 
 Here are the different pricing sources that we've collected so far :
 
-| link  | type of data  | frequency  | geographic level  | who added this link |
-|---|---|---|---|---|
-| [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |   |   | Thibaut  |
-| [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |   |   | Simon  |
-| [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |   | yearly  | country  | Hadrien  |
+| link  | indice | type of data  | frequency  | geographic level  | who added this link |
+|---|---|--|---|---|---|
+| [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
+| [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
+| [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |  |   | yearly  | country  | Hadrien  |
+
+The column "indice" represent the pricing indice that can be computed with this data source (CPI, price of a typical food basket, price of basic food ...)
 
 <u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
 
