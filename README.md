@@ -31,12 +31,12 @@ Studied moughataas, by region :
 |---------|------------|
 |<p align="center"> Trarza | <p align="center">  Ouad-Naga, Boutilimit |
 |<p align="center"> Brakna | <p align="center">  Magta-Lahjar, Aleg |
-|<p align="center"> Tagant | <p align="center">  MoudjÃ©ria |
-|<p align="center"> Assaba | <p align="center">  BoumdeÃ¯d, Kankossa, GuÃ©rou, BarkÃ©ol, Kiffa |
+|<p align="center"> Tagant | <p align="center">  Moudjeria |
+|<p align="center"> Assaba | <p align="center">  Boumdeïd, Kankossa, Guerou, Barkeol, Kiffa |
 |<p align="center"> Gorgol | <p align="center">  M'Bout, Monguel |
-|<p align="center"> Guidimaka | <p align="center">  Ould YengÃ©, SÃ©libaby |
-|<p align="center"> Hodh el Gharbi | <p align="center">  Tamchakett, AÃ¯oun, Kobenni, Tintane |
-|<p align="center"> Hodh ech Chargui | <p align="center">  TimbÃ©dra, NÃ©ma, Bassikounou, Amourj, Djiguenni |
+|<p align="center"> Guidimaka | <p align="center">  Ould Yenge, Selibaby |
+|<p align="center"> Hodh el Gharbi | <p align="center">  Tamchakett, Aïoun, Kobenni, Tintane |
+|<p align="center"> Hodh ech Chargui | <p align="center">  Timbédra, Néma, Bassikounou, Amourj, Djiguenni |
 
 ### Data sources
 
