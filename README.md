@@ -11,7 +11,10 @@
 - [Getting started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Create your pipenv](#create-your-pipenv)
-
+- [Data exploration](#data-exploration)
+  - [FSMS](#fsms)
+  - [Geospatial data](#geospatial-data)
+  - [Prices](#prices)
 
 ## About the project
 
@@ -21,42 +24,12 @@ Study the relationship between food price and food insecurity in Mauritania.
 
 ### Data sources
 
+Three categories of data sources will be used in this project :
+ - FSMS data 
+ - Geospatial data 
+ - Prices data 
 
-#### 1. FSMS
-
-Make sure to have `Mauritania FSMS data.zip` in your `$HOME`. The directory `Mauritania FSMS data` looks like this : 
-
-```
-Mauritania FSMS data
-├── year
-│    ├── monthYY
-│    │     ├── data.sav
-│    │     ├── pdf_1
-│    │     └── pdf_2
-[...]
-```
-
-We will here use the `.sav` files for our analysis. The script `Mauritania_FSMS_aggregation.py` aims at normalizing 
-the data in this folder.
-
-#### 2. Geospatial
-
-- GeoJSON of the studied zone
-- .tiff : births, population, roads, railways ... (uploaded by Simon on the Google Drive)
-
-#### 3. Prices
-
-Here are the different pricing sources that we've collected so far :
-
-| link  | indice | type of data  | frequency  | geographic level  | who added this link |
-|---|---|--|---|---|---|
-| [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
-| [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
-| [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |  |   | yearly  | country  | Hadrien  |
-
-The column "indice" represent the pricing indice that can be computed with this data source (CPI, price of a typical food basket, price of basic food ...)
-
-<u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
+See [Data exploration](#data-exploration) for more information.
 
 ### Scores
 
@@ -95,3 +68,44 @@ Once you've installed all you needed, you type `pipenv update`. It will update t
 
 **<u>NB :</u>**
 If you're using Pycharm, there are some extensions to use `pipenv` directly from your IDE.
+
+
+
+
+## Data exploration
+
+### FSMS
+
+Make sure to have `Mauritania FSMS data.zip` in your `$HOME`. The directory `Mauritania FSMS data` looks like this : 
+
+```
+Mauritania FSMS data
+├── year
+│    ├── monthYY
+│    │     ├── data.sav
+│    │     ├── pdf_1
+│    │     └── pdf_2
+[...]
+```
+
+We will here use the `.sav` files for our analysis. The script `Mauritania_FSMS_aggregation.py` aims at normalizing 
+the data in this folder.
+
+### Geospatial data
+
+- GeoJSON of the studied zone
+- .tiff : births, population, roads, railways ... (uploaded by Simon on the Google Drive)
+
+### Prices
+
+Here are the different pricing sources that we've collected so far :
+
+| link  | indice | type of data  | frequency  | geographic level  | who added this link |
+|---|---|--|---|---|---|
+| [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
+| [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
+| [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |  |   | yearly  | country  | Hadrien  |
+
+The column "indice" represent the pricing indice that can be computed with this data source (CPI, price of a typical food basket, price of basic food ...)
+
+<u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
