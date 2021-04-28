@@ -85,6 +85,8 @@ Here are the different pricing sources that we've collected so far :
 
 | link  | indice | type of data  | frequency  | geographic level  | who added this link |
 |-------|--------|---------------|------------|-------------------|---------------------|
+| [World Food Program](https://data.humdata.org/dataset/wfp-food-prices-for-mauritania?force_layout=desktop) |    |    |   | country  | Lucas  |
+| [World Bank](https://data.worldbank.org/country/MR) |    |    |   | country  | Lucas  |
 | [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
 | [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
 | [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |  |   | yearly  | country  | Hadrien  |
