@@ -20,7 +20,23 @@
 
 ### Goal
 
-Study the relationship between food price and food insecurity in Mauritania. 
+Study the influence of food price variations and other economic considerations (import, export, etc.) on food insecurity 
+in the South agropastoral zone of Mauritania. 
+
+The goal is to find a relationship that enables us to accurately estimate food insecurity situation there.
+
+Studied moughataas, by region :
+
+| region  | moughataas |
+|---------|------------|
+|<p align="center"> Trarza | <p align="center">  Ouad-Naga, Boutilimit |
+|<p align="center"> Brakna | <p align="center">  Magta-Lahjar, Aleg |
+|<p align="center"> Tagant | <p align="center">  MoudjÃ©ria |
+|<p align="center"> Assaba | <p align="center">  BoumdeÃ¯d, Kankossa, GuÃ©rou, BarkÃ©ol, Kiffa |
+|<p align="center"> Gorgol | <p align="center">  M'Bout, Monguel |
+|<p align="center"> Guidimaka | <p align="center">  Ould YengÃ©, SÃ©libaby |
+|<p align="center"> Hodh el Gharbi | <p align="center">  Tamchakett, AÃ¯oun, Kobenni, Tintane |
+|<p align="center"> Hodh ech Chargui | <p align="center">  TimbÃ©dra, NÃ©ma, Bassikounou, Amourj, Djiguenni |
 
 ### Data sources
 
@@ -99,12 +115,14 @@ the data in this folder.
 ### Prices
 
 Here are the different pricing sources that we've collected so far :
+     
 
 | link  | indice | type of data  | frequency  | geographic level  | who added this link |
-|---|---|--|---|---|---|
+|-------|--------|---------------|------------|-------------------|---------------------|
 | [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
 | [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
 | [FAO prices in Africa (.zip in Slack)](https://data-for-good.slack.com/archives/C01UPA0HKCY/p1618946330008000) |  |   | yearly  | country  | Hadrien  |
+                     
 
 The column "indice" represent the pricing indice that can be computed with this data source (CPI, price of a typical food basket, price of basic food ...)
 
