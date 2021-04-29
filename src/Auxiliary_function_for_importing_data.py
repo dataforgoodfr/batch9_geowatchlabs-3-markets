@@ -10,6 +10,7 @@ import os
 import os.path
 from pathlib import Path
 import errno
+import jellyfish
 
 ############################ Auxiliary functions ############################
 
