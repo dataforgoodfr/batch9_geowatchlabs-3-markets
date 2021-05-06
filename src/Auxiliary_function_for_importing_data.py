@@ -55,15 +55,18 @@ def get_data_with_filename(file):
         return None, None
 
 def clean(name):
-    #seperate in words
-    name_lowercase = name.lower()
-    relevant_words = re.findall(r'[a-z]+', name_lowercase)
+    if str(name) != "nan":
+        #seperate in words
+        name_lowercase = name.lower()
+        relevant_words = re.findall(r'[a-z]+', name_lowercase)
 
-    #remove one letter words
-    relevant_words = [word for word in relevant_words if len(word) > 1]
+        #remove one letter words
+        relevant_words = [word for word in relevant_words if len(word) > 1]
 
-    relevant_sentence = " ".join(relevant_words)
-    return relevant_sentence
+        relevant_sentence = " ".join(relevant_words)
+        return relevant_sentence
+    else:
+        return None
 
 def get_best_candidate_with_levenshtein_distance(match_name, candidates_name):
     distance_by_candidate = [jellyfish.levenshtein_distance(match_name, candidate) for candidate in candidates_name]
