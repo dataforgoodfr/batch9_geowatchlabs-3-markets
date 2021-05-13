@@ -84,3 +84,21 @@ def export_data(file_name):
     data, meta = get_data_with_filename(file)
     data.to_csv("file_name".split("/")[-1][:-4] + ".csv")
     meta.to_csv("file_name".split("/")[-1][:-4] + ".csv")
+
+def extract_pattern_from_string(string, pattern):
+        for pat in pattern:
+            if re.search(pat, string):
+                return(pat)
+                                
+def extract_year_from_filename(filename):
+    list_year = [str(n) for n in range(2010, 2016)]
+    return(extract_pattern_from_string(filename, pattern = list_year))
+
+def extract_month_from_filename(filename):
+    list_year = ['Decembre', 'Janvier', 'Juillet', 'Juin']
+    return(extract_pattern_from_string(filename, pattern = list_year))
+    
+        
+        
+
+

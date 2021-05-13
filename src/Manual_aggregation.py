@@ -13,6 +13,7 @@ def aggregate_matching_column_loop(data, column_names_clean, data_file_name, eq_
     perfect_match_columns = [column_names[id] for id in perfect_match_indexes if not id is None]
     temp = data[perfect_match_columns]
     temp.columns = [col for col in eq_target_columns_cleaned if not col is None and not perfect_match_index(col, column_names_clean) is None]
+    temp['Path'] = data_file_name
     return temp
 
 def aggregate_matching_column_moments_loop(data, column_names_clean, data_file_name, column_names, eq_target_columns_cleaned):
@@ -71,6 +72,12 @@ for data_file_index in range(len(data_files_list)):
         ### You can comment if not necessary
         match = match.append(aggregate_matching_column_loop(data, column_names_clean, data_file_name, eq_target_columns_cleaned, meta.column_names))
         match_moments = match_moments.append(aggregate_matching_column_moments_loop(data, column_names_clean, data_file_name, meta.column_names, eq_target_columns_cleaned))
+
+### add year and month data
+
+match['year'] = match['Path'].apply(extract_year_from_filename)
+match['month'] = match['Path'].apply(extract_month_from_filename)
+
 
 print("There are ",nb_valid_files ,"valid files")
 print("There are ",len(data_files_list) - nb_valid_files," issues with files")
