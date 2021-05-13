@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# pdf, excel, spss, csv, zip, tif, json extensions
+# pdf, excel, spss, csv, zip, tif, json, geojson extensions
 *.pdf
 *.xls
 *.xlsx
@@ -12,6 +12,7 @@ __pycache__/
 *.zip
 *.tif
 *.json
+*.geojson
 
 # exclude data folder
 src/Mauritania FSMS data/
