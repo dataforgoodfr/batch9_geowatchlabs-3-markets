@@ -24,3 +24,19 @@ file = data_2010_groundnut.geomap_file[4]
 #read the file
 arr = read_geo_file(file)
 
+
+
+from osgeo import gdal, ogr, osr
+
+raster=file
+ds=gdal.Open(raster)
+
+ext=GetExtent(ds)
+
+src_srs=osr.SpatialReference()
+src_srs.ImportFromWkt(ds.GetProjection())
+#tgt_srs=osr.SpatialReference()
+#tgt_srs.ImportFromEPSG(4326)
+tgt_srs = src_srs.CloneGeogCS()
+
+geo_ext=ReprojectCoords(ext, src_srs, tgt_srs)

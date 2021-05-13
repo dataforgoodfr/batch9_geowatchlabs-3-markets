@@ -83,3 +83,21 @@ def read_geo_file(file):
 #    print(prj)
    
     return(arr)
+    
+def GetExtent(ds):
+    """ Return list of corner coordinates from a gdal Dataset """
+    xmin, xpixel, _, ymax, _, ypixel = ds.GetGeoTransform()
+    width, height = ds.RasterXSize, ds.RasterYSize
+    xmax = xmin + width * xpixel
+    ymin = ymax + height * ypixel
+
+    return (xmin, ymax), (xmax, ymax), (xmax, ymin), (xmin, ymin)
+
+def ReprojectCoords(coords,src_srs,tgt_srs):
+    """ Reproject a list of x,y coordinates. """
+    trans_coords=[]
+    transform = osr.CoordinateTransformation( src_srs, tgt_srs)
+    for x,y in coords:
+        x,y,z = transform.TransformPoint(x,y)
+        trans_coords.append([x,y])
+    return trans_coords
