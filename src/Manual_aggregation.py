@@ -45,6 +45,22 @@ target_columns = ['NUMQUEST', 'IDENT', 'ENQU', 'Hors_NK', 'MOUGHATAA', 'COMMUNE'
                 'VILLAG0', 'VILLAGE', 'MILIEU', 'WILAYA', 'LATITUDE', 'LONGITUDE',
                 'ALTITUDE', 'NUMEN', 'DATE', 'CDATSAISIE', 'CODE_ENQ', 'CODE_CONT',
                 'LHG', 'LHZ', 'FCS', 'CSI']
+
+### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# COLUMNS TO BE ADDED TO THE FINAL DATASET
+## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+#target_columns += ['Tot_source', 'per.source1',	'per.source2',	'per.source3',
+#                   'per.source4',	'per.source5',	'per.source6',	'per.source7',
+#                   'per.source8',	'per.source9',	'per.source10',	'Q9_1',	'Q9_2',
+#                   'Q9_3',	'Q9_4',	'Q9_5',	'Q9_6',	'Q9_7',	'Q9_8',	'Q9_9_16$2', 	
+#                   'Q9_9_16$3',	'Q9_9_16$4',	'Q9_9_16$5',	'Q9_9_16$6',	
+#                   'Q9_9_16$7',	'Q9_9_16$8',	'Q9_9_16$9',	'Q9_9',	'Nb_hom',	
+#                   'Nb_fem',	'Rap_feminité',	'Pc_fem', 'Dependant',	'TxDep',	
+#                   'Equiv_ad',	'Tailmen',	'Q2_5',	'HWDDS',	'Pondérations',	
+#                   'Extrap', 'Trage1',	'Trage2',	'Q2_1',	'Q2_2',	'Q2_3',	'Q2_4',	'Scol']
+
+
 target_columns_cleaned = [clean(col) for col in target_columns if not col is None]
 
 ### can be commented
