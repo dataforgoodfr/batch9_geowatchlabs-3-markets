@@ -13,6 +13,7 @@ def aggregate_matching_column_loop(data, column_names, data_file_name, eq_target
     perfect_match_columns = [column_names[id] for id in perfect_match_indexes if not id is None]
     temp = data[perfect_match_columns]
     temp.columns = [target_columns[i] for i in range(len(eq_target_column)) if not eq_target_column[i]  is None and not perfect_match_index(eq_target_column[i] , column_names) is None]
+    temp['Path'] = data_file_name
     return temp
 
 def aggregate_matching_column_moments_loop(data, column_names, data_file_name, eq_target_column, target_columns):
