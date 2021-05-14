@@ -6,11 +6,11 @@ from Auxiliary_function_for_importing_data import *
 
 ############################ code ############################
 
-unzip_data()
+unzip_data("Mauritania FSMS data")
 
 print("------------- data unzipped ---------------")
 
-data_files_list = get_list_of_data_files()
+data_files_list = get_list_of_data_files("Mauritania FSMS data", ".sav")
 
 print("------------- choose file -----------------")
 

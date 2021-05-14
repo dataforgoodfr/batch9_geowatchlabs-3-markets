@@ -14,25 +14,26 @@ import jellyfish
 
 ############################ Auxiliary functions ############################
 
-def unzip_data():
+def unzip_data(folder_name):
     current_directory = str(Path().absolute())
 
-    correct_zip_file = [f for f in os.listdir(current_directory) if f[:20] == "Mauritania FSMS data"]
+    correct_zip_file = [f for f in os.listdir(current_directory) if f[:len(folder_name)] == folder_name]
     if len(correct_zip_file) == 0:
-        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "Mauritania FSMS data")
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), folder_name + "%%%%.zip")
 
     zip_file = os.path.join(current_directory, correct_zip_file[-1])
-    root_folder = os.path.join(current_directory, "Mauritania FSMS data%%%%.zip")
+    root_folder = os.path.join(current_directory, folder_name)
 
     # unzip file
     if not os.path.exists(root_folder):
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(current_directory)
 
-def get_list_of_data_files():
+
+def get_list_of_data_files(folder_name, extension):
     current_directory = str(Path().absolute())
 
-    root_folder = os.path.join(current_directory, 'Mauritania FSMS data')
+    root_folder = os.path.join(current_directory, folder_name)
 
     # list all files in folder
     list_all_files = []
@@ -41,7 +42,7 @@ def get_list_of_data_files():
             list_all_files.append(os.path.join(path, name))
 
     # list data files
-    list_data_file = [f for f in list_all_files if re.search('.sav$', f)]
+    list_data_file = [f for f in list_all_files if re.search(extension + '$', f)]
 
     return list_data_file
 
