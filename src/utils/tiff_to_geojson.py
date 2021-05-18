@@ -36,14 +36,14 @@ def convert_tiff_to_geojson(original_tiff_path, destination_geojson_path, band):
 
 if __name__ == "__main__":
     for file in os.listdir("asset/tiff"):
-        print("Conversion of "+file+" starting ...")
+        print("Conversion of " + file + " starting ...")
         try:
-            if file.replace("tiff","geojson") not in os.listdir("asset/geojson"):
-                tiff_path = os.getcwd()+"asset/tiff/"+file
-                geojson_path = tiff_path.replace("tiff","geojson")
+            if file.replace("tiff", "geojson") not in os.listdir("asset/geojson"):
+                tiff_path = os.getcwd() + "asset/tiff/" + file
+                geojson_path = tiff_path.replace("tiff", "geojson")
                 convert_tiff_to_geojson(tiff_path, geojson_path, 1)
-                print("Conversion of "+file+" successful !")
+                print("Conversion of " + file + " successful !")
             else:
                 print("File already converted in geojson !")
         except Exception as e:
-            print("Couldn't convert file "+file+", exception :"+e.__str__())
+            print("Couldn't convert file " + file + ", exception :" + e.__str__())
