@@ -4,6 +4,12 @@
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [Getting started](#getting-started)
+  - [Repository structure](#repository-structure)
+    - [Config](#config)
+    - [Import functions](#import-functions)
+    - [Preprocessing functions](#preprocessing-functions)
+    - [Utils](#utils)
 - [About the project](#about-the-project)
   - [Goal](#goal)
   - [Data sources](#data-sources)
@@ -12,9 +18,61 @@
   - [FSMS](#fsms)
   - [Geospatial data](#geospatial-data)
   - [Prices](#prices)
-- [Getting started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Create your pipenv](#create-your-pipenv)
+  
+
+
+
+____________________________________________________________________
+
+## Getting started
+
+### Repository structure
+
+Our repository structure is the following :
+
+```bash
+├── config
+|    ├── aggregation.py
+|    └── preprocessing.py
+├── import_functions
+|    ├── automatic_analysis_and_aggregation.py
+|    ├── auxiliary_function_for_geo_files.py
+|    ├── auxiliary_function_for_importing_data.py
+|    └── manual_aggregation.py
+├── notebooks
+|    ├── faodata.ipynb
+|    ├── geoviz.ipynb
+|    ├── mean_of_communes_yield.ipynb
+|    └── study_data_types_preprocessing.ipynb
+├── preprocessing
+|    └── preprocessing.py
+└── utils
+    └── tiff_to_geojson.py
+```
+
+#### Config
+
+Config folder is about all variables we setup for the project.
+
+
+#### Import functions
+
+Those are the functions extracting data from the zipfile and aggregating it into a csv file. 
+
+The most important code here is `manual_aggregation`, reading all files from the main zip, unzipping them and standardizing 
+column names according to manual inputs the team made in a csv, and aggregating it.
+It generates a standardized dataframe, and a metadata dataframe.
+
+
+#### Preprocessing functions
+
+Those are the functions reading the csv file and imputing missing values, standardizing data types and data before 
+analysis and clustering. 
+
+#### Utils
+
+Additional functions that can be useful for some operations.
+
 
 ____________________________________________________________________
 
@@ -96,43 +154,4 @@ The column "indice" represent the pricing indice that can be computed with this 
 
 <u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
 
-
-
-____________________________________________________________________
-
-## Getting started
-
-
-### Prerequisites
-
--   Python 3.9 (or more recent)
--   [pipenv](https://pypi.org/project/pipenv/)
-
-### Create your pipenv
-
-Open your terminal, and install pipenv with:
-```shell
-pip install pipenv
-```
-
-Then, from the `src` directory, type:
-```shell
-pipenv install
-```
-
-This will create the virtualenv for this project, with the correct packages and versions.
-
-Then type:
-```shell
-pipenv shell
-```
-
-To activate the virtualenv. And that's all !
-
-**<u>WARNING :</u>**
-When installing a package, you now have to use `pipenv install` instead of `pip install`. 
-Once you've installed all you needed, you type `pipenv update`. It will update the `Pipfile`.
-
-**<u>NB :</u>**
-If you're using Pycharm, there are some extensions to use `pipenv` directly from your IDE.
 
