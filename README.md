@@ -61,8 +61,15 @@ Those are the functions extracting data from the zipfile and aggregating it into
 
 The most important code here is `manual_aggregation`, reading all files from the main zip, unzipping them and standardizing 
 column names according to manual inputs the team made in a csv, and aggregating it.
+
+<p align="center">
+  <img src="doc/manual_aggregation_readme.png"/>
+</p>
+
 It generates a standardized dataframe, and a metadata dataframe.
 
+⚠️ `manual_aggregation` may seem similar to `automatic_analysis_and_aggregation`, but it's not. `automatic_analysis_and_aggregation`
+ aims at matching columns based on levenstein distance.
 
 #### Preprocessing functions
 
