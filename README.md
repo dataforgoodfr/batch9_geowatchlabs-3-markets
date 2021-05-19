@@ -63,7 +63,7 @@ The most important code here is `manual_aggregation`, reading all files from the
 column names according to manual inputs the team made in a csv, and aggregating it.
 
 <p align="center">
-  <img src="doc/manual_aggregation_readme.png"/>
+  <img src="https://github.com/dataforgoodfr/batch9_geowatchlabs-3-markets/blob/main/doc/manual_aggregation_readme.png"/>
 </p>
 
 It generates a standardized dataframe, and a metadata dataframe.
