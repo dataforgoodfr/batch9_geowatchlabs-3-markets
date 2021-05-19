@@ -5,10 +5,11 @@ import numpy as np
 Uses common matching work on columns through years to match them.
 """
 
+
 def aggregate_matching_column_loop(
     data, column_names, data_file_name, eq_target_column, target_columns
 ):
-    """ Returns a DataFrame containing only columns we could match with their official name.
+    """Returns a DataFrame containing only columns we could match with their official name.
 
     Args:
         data (pd.DataFrame): DataFrame of current inspected file.
@@ -70,7 +71,7 @@ def aggregate_matching_column_moments_loop(
     return temp
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     home_folder_path = Path.home()
     os.chdir(home_folder_path)
     unzip_data("Mauritania FSMS data")
@@ -78,7 +79,9 @@ if __name__=="__main__":
     nb_valid_files = 0
 
     equivalent_columns_table = pd.read_csv("columns.csv", sep=",", header=0)
-    target_columns = [col for col in equivalent_columns_table.columns if str(col) != "nan"]
+    target_columns = [
+        col for col in equivalent_columns_table.columns if str(col) != "nan"
+    ]
 
     match = pd.DataFrame(data=[], columns=target_columns)
     match_moments = pd.DataFrame(
@@ -95,16 +98,25 @@ if __name__=="__main__":
 
             column_names = [col for col in meta.column_names if not col is None]
             eq_target_columns = [
-                equivalent_columns_table.loc[data_file_index, col] for col in target_columns
+                equivalent_columns_table.loc[data_file_index, col]
+                for col in target_columns
             ]
             match = match.append(
                 aggregate_matching_column_loop(
-                    data, column_names, data_file_name, eq_target_columns, target_columns
+                    data,
+                    column_names,
+                    data_file_name,
+                    eq_target_columns,
+                    target_columns,
                 )
             )
             match_moments = match_moments.append(
                 aggregate_matching_column_moments_loop(
-                    data, column_names, data_file_name, eq_target_columns, target_columns
+                    data,
+                    column_names,
+                    data_file_name,
+                    eq_target_columns,
+                    target_columns,
                 )
             )
 

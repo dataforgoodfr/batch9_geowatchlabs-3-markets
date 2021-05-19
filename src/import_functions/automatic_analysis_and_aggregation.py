@@ -73,7 +73,7 @@ def get_best_match_with_column_name_loop(
         column_names_clean (str):
         target_columns_cleaned (list): list of cleaned column names.
         data_file_name (str):
-        best_match (str):
+        best_match (pd.DataFrame): DataFrame of matches
         equivalent_columns_table (pd.DataFrame):
 
     """
@@ -92,6 +92,7 @@ def get_best_match_with_column_name_loop(
         best_candidate_by_name_row.append(column_min + "/" + str(distance_min))
 
     best_match.loc[data_file_name + "name"] = best_candidate_by_name_row + ["name"]
+    return best_match
 
 
 def get_best_match_with_column_label_loop(
@@ -140,6 +141,7 @@ def generate_best_matches_csv_file(
     data_to_unzip="Mauritania FSMS data.zip",
     target_columns=target_columns,
     home_folder_path=None,
+    destination_filename="best_match_for_FSMS_files_columns.csv",
 ):
     """Function to generate a csv file showing all matching between column names
     for the aggregation.
@@ -187,7 +189,7 @@ def generate_best_matches_csv_file(
                 for i in range(len(label_names))
                 if not label_names[i] is None and not column_names[i] is None
             ]
-            get_best_match_with_column_name_loop(
+            best_match = get_best_match_with_column_name_loop(
                 column_names_clean,
                 target_columns_cleaned,
                 data_file_name,
@@ -195,4 +197,4 @@ def generate_best_matches_csv_file(
                 equivalent_columns_table,
             )
     if not best_match.empty:
-        best_match.to_csv("best_match_for_FSMS_files_columns.csv", sep=";")
+        best_match.to_csv(destination_filename, sep=";")
