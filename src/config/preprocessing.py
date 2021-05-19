@@ -77,3 +77,6 @@ preprocessing_FSMS_files_with_yields_types = {
     "maize": "int64",
     "cowpea": "int64",
 }
+
+education_level_standardization_origin = ["1.0","0.0","Oui","Non","Primaire et plus","Niveau primaire et plus","Au moins le niveau primaire","Moins que le niveau primaire","Aucun, coranique et Alphabétisation","Non scolarisé (formel)"]
+education_level_standardization_match = ["1","0","1","0","1","1","1","1","0","0"]
