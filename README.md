@@ -30,7 +30,7 @@ ____________________________________________________________________
 
 Our repository structure is the following :
 
-```bash
+```
 ├── config
 |    ├── aggregation.py
 |    └── preprocessing.py
