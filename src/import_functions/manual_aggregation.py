@@ -71,7 +71,7 @@ def aggregate_matching_column_moments_loop(
     return temp
 
 
-if __name__ == "__main__":
+def import_dataset():
     home_folder_path = Path.home()
     os.chdir(home_folder_path)
     unzip_data("Mauritania FSMS data")
@@ -122,6 +122,11 @@ if __name__ == "__main__":
 
     match["year"] = match["Path"].apply(extract_year_from_filename)
     match["month"] = match["Path"].apply(extract_month_from_filename)
+
+    #TODO
+    # - add yields
+    # - add prices
+    # - return df, do not compute csv
 
     if not match.empty:
         match.reset_index()
