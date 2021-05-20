@@ -43,6 +43,9 @@ def preprocess_FSMS_files_with_yields(
     )  # je l'ai gardé mais je pense à supprimer + tard
 
     df_aggregated_file["Scol"] = standardize_education_level(df_aggregated_file["Scol"])
+    df_aggregated_file["Tailmen"] = df_aggregated_file["Tailmen"].apply(
+        lambda row: standardize_tailmen(row)
+    )
     df_aggregated_file = df_aggregated_file.drop(
         columns=["cdatsaisie"]
     )  # we don't need it, c'est la date de saisie
