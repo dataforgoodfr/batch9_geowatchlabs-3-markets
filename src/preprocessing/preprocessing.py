@@ -13,7 +13,7 @@ from config.preprocessing import (
 )
 
 
-def preprocess_FSMS_files_with_yields(
+def preprocess_FSMS_files_with_yields_and_prices(
     home_path=None,
     csv_file="/aggregated_match_for_FSMS_files_with_yields_with_price.csv",
 ):
@@ -51,7 +51,7 @@ def preprocess_FSMS_files_with_yields(
     df_aggregated_file["date"] = pd.to_datetime(
         df_aggregated_file["date"], format="%Y-%m-%d", errors="coerce"
     )
-    df_aggregated_file = geospatial_match_dataframe(df_aggregated_file)
+    df_aggregated_file = fill_lat_lon(df_aggregated_file)
     return df_aggregated_file
 
 
@@ -196,4 +196,5 @@ def standardize_date(date):
 
 
 if __name__ == "__main__":
-    preprocess_FSMS_files_with_yields()
+    df = preprocess_FSMS_files_with_yields_and_prices()
+    df.to_csv("./standardized_aggregated_dataset.csv")
