@@ -40,7 +40,7 @@ def preprocess_FSMS_files_with_yields(
     )
     df_aggregated_file = df_aggregated_file.rename(
         columns={"id": "price_id"}
-    )  # je l'ai gardé mais je pense à supprimer + tard
+    )
 
     df_aggregated_file["Scol"] = standardize_education_level(df_aggregated_file["Scol"])
     df_aggregated_file["Tailmen"] = df_aggregated_file["Tailmen"].apply(
@@ -48,7 +48,7 @@ def preprocess_FSMS_files_with_yields(
     )
     df_aggregated_file = df_aggregated_file.drop(
         columns=["cdatsaisie"]
-    )  # we don't need it, c'est la date de saisie
+    )
     df_aggregated_file["date"] = df_aggregated_file["date"].apply(
         lambda row: standardize_date(row)
     )
@@ -56,6 +56,55 @@ def preprocess_FSMS_files_with_yields(
         df_aggregated_file["date"], format="%Y-%m-%d", errors="coerce"
     )
     return df_aggregated_file
+
+
+def geospatial_match_dataframe(df):
+    """ Create a DataFrame to match communes+moughataas+latitude+longitude+altitude.
+
+    Args:
+        df (pd.DataFrame): original DataFrame, to compute the matching table from.
+
+    Returns:
+        commune_geo_table (pd.DataFrame): matching DataFrame.
+    """
+    commune_geo_table = pd.DataFrame(df[["commune", "latitude", "longitude", "Altitude"]].groupby(
+        by=["commune"]).mean()).reset_index()
+    moughataa_geo_table = pd.DataFrame(df[["moughataa", "latitude", "longitude", "Altitude"]].groupby(
+        by=["moughataa"]).mean()).reset_index()
+
+    moughataas_communes = df[["commune", "moughataa"]].drop_duplicates().set_index("commune")
+    moughataas_communes_match_dict = moughataas_communes.to_dict()['moughataa']
+    commune_geo_table["moughataa"] = commune_geo_table["commune"].apply(lambda row: moughataas_communes_match_dict[row])
+    commune_geo_table = commune_geo_table.merge(moughataa_geo_table, on="moughataa", how="left",
+                                                suffixes=("", "_moughataa"))
+    commune_geo_table["latitude"] = commune_geo_table["latitude"].fillna(commune_geo_table["latitude_moughataa"])
+    commune_geo_table["longitude"] = commune_geo_table["longitude"].fillna(commune_geo_table["longitude_moughataa"])
+    commune_geo_table["Altitude"] = commune_geo_table["Altitude"].fillna(commune_geo_table["Altitude_moughataa"])
+    commune_geo_table = commune_geo_table.drop(
+        columns=["latitude_moughataa", "longitude_moughataa", "Altitude_moughataa"])
+    return commune_geo_table
+
+
+def fill_lat_lon(df):
+    """ This function aims at filling missing lat-lon and altitude values.
+    If lat-long is missing, then we impute the average lat-lon of the commune.
+    If the lat-long is missing in the commune, we impute the average lat-lon
+    of the moughataa.
+
+    Args:
+        df (pd.DataFrame): DataFrame we want to impute the values in.
+
+    Returns:
+        df (pd.DataFrame): filled DataFrame.
+    """
+    df_geo_match = geospatial_match_dataframe(df)
+    df = df.merge(df_geo_match, how="left", on="commune",
+                                                  suffixes=("", "_geomatch"))
+    df["latitude"] = df["latitude"].fillna(df["latitude_geomatch"])
+    df["longitude"] = df["longitude"].fillna(df["longitude_geomatch"])
+    df["Altitude"] = df["Altitude"].fillna(df["Altitude_geomatch"])
+    df = df.drop(columns=["latitude_geomatch", "longitude_geomatch", "Altitude_geomatch"])
+    return df
 
 
 def standardize_education_level(education_column):
