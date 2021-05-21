@@ -22,3 +22,19 @@ target_columns = [
     "FCS",
     "CSI",
 ]
+
+month_to_nb = {
+    "nan": "",
+    "Decembre": "12",
+    "Novembre": "11",
+    "Octobre": "10",
+    "Septembre": "09",
+    "Aout": "08",
+    "Juillet": "07",
+    "Juin": "06",
+    "Mai": "05",
+    "Avril": "04",
+    "Mars": "03",
+    "Fevrier": "02",
+    "Janvier": "01",
+}
