@@ -1,6 +1,9 @@
 from import_functions.auxiliary_function_for_importing_data import *
 import numpy as np
 
+from import_functions.import_prices import import_prices
+from import_functions.import_yields import import_commune_yields, join_yields
+
 """
 Uses common matching work on columns through years to match them.
 """
@@ -71,14 +74,22 @@ def aggregate_matching_column_moments_loop(
     return temp
 
 
-def import_dataset():
-    home_folder_path = Path.home()
+def import_dataset(
+    home_folder_path=None,
+    mauritania_FSMS_data_zipfile="Mauritania FSMS data",
+    columns_csv_path="columns.csv",
+    path_to_population_image="Groupe 3 - Marchés Alimentaires/images/population images",
+    path_to_wfp_food_prices_mauritania_csv="Groupe 3 - Marchés Alimentaires/prix/wfp_food_prices_mauritania.csv",
+    historical_data_files_path="GeoWatch Labs Agricultural Maps/Historical Yields",
+):
+    if home_folder_path is None:
+        home_folder_path = Path.home()
     os.chdir(home_folder_path)
-    unzip_data("Mauritania FSMS data")
-    data_files_list = get_list_of_data_files("Mauritania FSMS data", ".sav")
+    unzip_data(mauritania_FSMS_data_zipfile)
+    data_files_list = get_list_of_data_files(mauritania_FSMS_data_zipfile, ".sav")
     nb_valid_files = 0
 
-    equivalent_columns_table = pd.read_csv("columns.csv", sep=",", header=0)
+    equivalent_columns_table = pd.read_csv(columns_csv_path, sep=",", header=0)
     target_columns = [
         col for col in equivalent_columns_table.columns if str(col) != "nan"
     ]
@@ -123,15 +134,27 @@ def import_dataset():
     match["year"] = match["Path"].apply(extract_year_from_filename)
     match["month"] = match["Path"].apply(extract_month_from_filename)
 
-    # TODO
-    # - add yields
-    # - add prices
-    # - return df, do not compute csv
+    historical_data_files_list = get_list_of_data_files(
+        historical_data_files_path, ".tif"
+    )
+    commune_to_yield_avg_by_year_by_crop, commune_dict = import_commune_yields(
+        historical_data_files_list, path_to_population_image
+    )
+
+    match = join_yields(match, commune_to_yield_avg_by_year_by_crop, commune_dict)
+    match = import_prices(
+        match,
+        path_to_wfp_food_prices_mauritania_csv,
+    )
 
     if not match.empty:
         match.reset_index()
-        match.to_csv("aggregated_match_for_FSMS_files.csv", sep=",", index=False)
-
+        match.to_csv(
+            "aggregated_match_for_FSMS_files_with_yields_with_price.csv",
+            sep=",",
+            index=False,
+        )
+        return match
     if not match_moments.empty:
         match_moments.reset_index()
         match_moments.to_csv(
