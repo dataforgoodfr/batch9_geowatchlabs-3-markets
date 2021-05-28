@@ -84,7 +84,7 @@ def import_dataset(
 ):
     if home_folder_path is None:
         home_folder_path = Path.home()
-    os.chdir(home_folder_path)
+    #os.chdir(home_folder_path)
     unzip_data(mauritania_FSMS_data_zipfile)
     data_files_list = get_list_of_data_files(mauritania_FSMS_data_zipfile, ".sav")
     nb_valid_files = 0
