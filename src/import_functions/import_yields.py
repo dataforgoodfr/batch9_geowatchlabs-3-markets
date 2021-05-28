@@ -12,6 +12,7 @@ from pathlib import Path
 import errno
 from shapely.geometry import Polygon
 from scipy.special import expit
+from import_functions.auxiliary_function_for_importing_data import extract_year_from_filename
 
 
 def get_list_of_data_files(folder_name, extension):
@@ -131,23 +132,39 @@ def import_commune_yields(data_files_list, path_to_population_image):
     year = "2009"
 
     for data_file_index in range(len(data_files_list)):
+        
+        #print(data_files_list[data_file_index])
 
         print(round(data_file_index / len(data_files_list) * 100), " %")
 
-        data_file_name = data_files_list[data_file_index]
-
-        if year != data_file_name.split("/")[-4]:
-            year = data_file_name.split("/")[-4]
-            (
-                dataset_pop,
-                xmin_pop,
-                xmax_pop,
-                ymin_pop,
-                ymax_pop,
-            ) = convert_one_band_raster_to_mappable(
-                path_to_population_image + "/" + year + "_population.tif"
-            )
-
+        data_file_name = data_files_list[data_file_index]        
+       
+        year_file = extract_year_from_filename(data_file_name)            
+            
+        if year != year_file:
+            year = year_file            
+            
+            path_pop_img_year = path_to_population_image + "/" + year + "_population.tif"
+           
+            try:  
+                (
+                    dataset_pop,
+                    xmin_pop,
+                    xmax_pop,
+                    ymin_pop,
+                    ymax_pop,
+                ) = convert_one_band_raster_to_mappable(path_pop_img_year)
+            except:
+                path_img = path_to_population_image.replace('Groupe 3 - Marchés Alimentaires/','')
+                path_pop_img_year = './'+ path_img + "/" + year + "_population.tif"
+                (
+                    dataset_pop,
+                    xmin_pop,
+                    xmax_pop,
+                    ymin_pop,
+                    ymax_pop,
+                ) = convert_one_band_raster_to_mappable(path_pop_img_year)
+                
         dataset, xmin, xmax, ymin, ymax = convert_one_band_raster_to_mappable(
             data_file_name
         )
@@ -177,33 +194,35 @@ def import_commune_yields(data_files_list, path_to_population_image):
                 mean = np.sum(dataset * mask) / mask_sum / np.sum(mask_pop)
             else:
                 mean = 0
-
+            
+            year_file = extract_year_from_filename(data_file_name)       
+#            print(data_file_name)
             if (
                 not commune_id[id]
                 in commune_to_yield_avg_by_year_by_crop[
-                    data_file_name.split("/")[-4]
+                    year_file
                 ].keys()
             ):
-                commune_to_yield_avg_by_year_by_crop[data_file_name.split("/")[-4]][
+                commune_to_yield_avg_by_year_by_crop[year_file][
                     commune_id[id]
                 ] = {data_file_name.split("/")[-2]: mean}
             else:
                 if (
                     not data_file_name.split("/")[-2]
                     in commune_to_yield_avg_by_year_by_crop[
-                        data_file_name.split("/")[-4]
+                        year_file
                     ][commune_id[id]].keys()
                 ):
-                    commune_to_yield_avg_by_year_by_crop[data_file_name.split("/")[-4]][
+                    commune_to_yield_avg_by_year_by_crop[year_file][
                         commune_id[id]
                     ][data_file_name.split("/")[-2]] = mean
                 else:
-                    commune_to_yield_avg_by_year_by_crop[data_file_name.split("/")[-4]][
+                    commune_to_yield_avg_by_year_by_crop[year_file][
                         commune_id[id]
                     ][data_file_name.split("/")[-2]] = max(
                         mean,
                         commune_to_yield_avg_by_year_by_crop[
-                            data_file_name.split("/")[-4]
+                            year_file
                         ][commune_id[id]][data_file_name.split("/")[-2]],
                     )
     return commune_to_yield_avg_by_year_by_crop, commune_dict

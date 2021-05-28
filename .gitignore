@@ -16,6 +16,8 @@ __pycache__/
 
 # exclude data folder
 src/Mauritania FSMS data/
+src/GeoWatch Labs Agricultural Maps/
+src/images/
 
 # C extensions
 *.so
