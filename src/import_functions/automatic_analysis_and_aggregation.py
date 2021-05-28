@@ -1,4 +1,4 @@
-from auxiliary_function_for_importing_data import *
+from import_functions.auxiliary_function_for_importing_data import *
 from config.aggregation import target_columns
 
 

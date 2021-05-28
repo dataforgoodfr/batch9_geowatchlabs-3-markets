@@ -209,26 +209,27 @@ def clean_name(name):
     Returns:
         name (str): cleaned name
     """
-  return name.lower().replace(" ","").replace("_","").replace("ène", "en").replace("2", "")
+    
+    return name.lower().replace(" ","").replace("_","").replace("ène", "en").replace("2", "")
 
 
 def get_real_name(moughataa, commune_dict):
     """get cleaned moughataa name if indice
-
+    
     Args:
         moughataa (unknown): can be name of moughataa or indice in float or string of float
-
+    
     Returns:
         name (str): actual cleaned moughataa name
     """
-  if str(moughataa) == "nan":
-    return ""
-  elif str(type(moughataa)) == "<class 'float'>":
-    return clean_name(commune_dict[int(moughataa)])
-  elif "." in moughataa:
-    return clean_name(commune_dict[int(float(moughataa))])
-  else:
-    return clean_name(moughataa)
+    if str(moughataa) == "nan":
+        return ""
+    elif str(type(moughataa)) == "<class 'float'>":
+        return clean_name(commune_dict[int(moughataa)])
+    elif "." in moughataa:
+        return clean_name(commune_dict[int(float(moughataa))])
+    else:
+        return clean_name(moughataa)
 
 
 def clean_moughataa_column(data, commune_dict):
@@ -239,7 +240,7 @@ def clean_moughataa_column(data, commune_dict):
     Returns:
         name (str): actual cleaned moughataa name
     """
-  try:
+    try:
         with open("Communes.geojson") as json_file:
             data = json.load(json_file)
 
@@ -249,3 +250,5 @@ def clean_moughataa_column(data, commune_dict):
         }
 
         data["moughataa"] = [get_real_name(name, commune_dict) for name in data["moughataa"]]
+    except:
+        pass
