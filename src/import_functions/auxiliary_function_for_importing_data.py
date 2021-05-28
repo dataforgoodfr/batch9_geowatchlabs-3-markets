@@ -231,7 +231,7 @@ def get_real_name(moughataa, commune_dict):
     return clean_name(moughataa)
 
 
-def clean_moughataa(data, commune_dict):
+def clean_moughataa_column(data, commune_dict):
     """clean moughataa column
     Args:
         data (dataframe): dataframe of data with a moughataa column

@@ -142,11 +142,13 @@ def import_dataset(
     )
 
     match = join_yields(match, commune_to_yield_avg_by_year_by_crop, commune_dict)
+    
+    clean_moughataa_column(match, commune_dict)
+    
     match = import_prices(
         match,
         path_to_wfp_food_prices_mauritania_csv,
     )
-    clean_moughataa(match, commune_dict)
 
     if not match.empty:
         match.reset_index()
