@@ -146,6 +146,7 @@ def import_dataset(
         match,
         path_to_wfp_food_prices_mauritania_csv,
     )
+    clean_moughataa(match, commune_dict)
 
     if not match.empty:
         match.reset_index()
