@@ -232,10 +232,15 @@ def join_yields(
         "cowpea": [],
     }
     df_aggregated_match_for_FSMS_files = df_aggregated_match_for_FSMS_files.reset_index(drop=True)
+   
     for row in df_aggregated_match_for_FSMS_files.index:
+        
         if str(df_aggregated_match_for_FSMS_files.loc[row, "moughataa"]) != "nan":
-            year = str(df_aggregated_match_for_FSMS_files.loc[row, "year"] - 1)
+            
+            year = str(int(df_aggregated_match_for_FSMS_files.loc[row, "year"]) - 1)
+            
             if ".0" in str(df_aggregated_match_for_FSMS_files.loc[row, "moughataa"]):
+                
                 village = str(df_aggregated_match_for_FSMS_files.loc[row, "moughataa"])[
                     :-2
                 ]
