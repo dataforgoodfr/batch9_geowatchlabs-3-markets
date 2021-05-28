@@ -55,7 +55,7 @@ def import_prices(
         price_data_clean,
         left_on="id",
         right_on="id",
-        how="inner",
+        how="left",
     )
     df = df.drop(columns=["id"])
     return df
