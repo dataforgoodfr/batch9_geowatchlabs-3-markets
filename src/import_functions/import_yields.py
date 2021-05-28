@@ -260,16 +260,10 @@ def join_yields(
                         new_columns[culture].append("")
             else:
                 for culture in new_columns.keys():
-                    if culture in yields.keys():
-                        new_columns[culture].append(yields[culture])
-                    else:
-                        new_columns[culture].append("")
+                    new_columns[culture].append("")
         else:
             for culture in new_columns.keys():
-                if culture in yields.keys():
-                    new_columns[culture].append(yields[culture])
-                else:
-                    new_columns[culture].append("")
+                new_columns[culture].append("")
 
     for culture in new_columns.keys():
         df_aggregated_match_for_FSMS_files[culture] = new_columns[culture]
