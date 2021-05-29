@@ -150,7 +150,7 @@ Here are the different pricing sources that we've collected so far :
 
 | link  | indice | type of data  | frequency  | geographic level  | who added this link |
 |-------|--------|---------------|------------|-------------------|---------------------|
-| [World Food Program](https://data.humdata.org/dataset/wfp-food-prices-for-mauritania?force_layout=desktop) |    |    |   | country  | Lucas  |
+| [World Food Program](https://data.humdata.org/dataset/wfp-food-prices-for-mauritania?force_layout=desktop) |    | price by crop | yearly | market  | Lucas  |
 | [World Bank](https://data.worldbank.org/country/MR) |    |    |   | country  | Lucas  |
 | [FAO](https://fpma.apps.fao.org/giews/food-prices/tool/public/#/dataset/domestic) |    |    |   |   | Thibaut  |
 | [Food security portal](https://api.foodsecurityportal.org/organization/food-security-portal) |    |  |   |   | Simon  |
@@ -161,4 +161,4 @@ The column "indice" represent the pricing indice that can be computed with this 
 
 <u><b>NB :</b></u> the column "who added this link" is here in case you want to ask questions about the source to the person who found it
 
-
+We used the [World Food Program] source as it is the most granular and comprehensive for Mauritania.
