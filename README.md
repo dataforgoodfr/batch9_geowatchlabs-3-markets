@@ -6,6 +6,7 @@
 - [Table of Contents](#table-of-contents)
 - [Getting started](#getting-started)
   - [Repository structure](#repository-structure)
+    - [External data required](#external-data)
     - [Config](#config)
     - [Import functions](#import-functions)
     - [Preprocessing functions](#preprocessing-functions)
@@ -50,6 +51,10 @@ Our repository structure is the following :
     └── tiff_to_geojson.py
 ```
 
+### External data required
+
+Please download "Groupe 3 - Marchés Alimentaires", "Mauritania FSMS data" and "Communes.geojson" in the ./src folder before running main.py
+  
 #### Config
 
 Config folder is about all variables we setup for the project.
