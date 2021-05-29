@@ -51,7 +51,7 @@ Our repository structure is the following :
     └── tiff_to_geojson.py
 ```
 
-### External data required
+#### External data required
 
 Please download "Groupe 3 - Marchés Alimentaires", "Mauritania FSMS data" and "Communes.geojson" in the ./src folder before running main.py
   
