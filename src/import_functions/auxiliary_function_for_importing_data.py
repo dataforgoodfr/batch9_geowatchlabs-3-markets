@@ -240,15 +240,12 @@ def clean_moughataa_column(data, commune_dict):
     Returns:
         name (str): actual cleaned moughataa name
     """
-    try:
-        with open("Communes.geojson") as json_file:
-            temp = json.load(json_file)
+    with open("Communes.geojson") as json_file:
+        temp = json.load(json_file)
 
-        commune_dict = {
-            int(commune['properties']['ID_3']) : clean_name(commune['properties']['ADM3_REFNA'])
-            for commune in temp['features']
-        }
+    commune_dict = {
+        int(commune['properties']['ID_3']) : clean_name(commune['properties']['ADM3_REFNA'])
+        for commune in temp['features']
+    }
 
-        data["moughataa"] = [get_real_name(name, commune_dict) for name in data["moughataa"]]
-    except:
-        pass
+    data["moughataa"] = [get_real_name(name, commune_dict) for name in data["moughataa"]]
