@@ -132,8 +132,6 @@ def import_commune_yields(data_files_list, path_to_population_image):
     year = "2009"
 
     for data_file_index in range(len(data_files_list)):
-        
-        #print(data_files_list[data_file_index])
 
         print(round(data_file_index / len(data_files_list) * 100), " %")
 
@@ -144,26 +142,15 @@ def import_commune_yields(data_files_list, path_to_population_image):
         if year != year_file:
             year = year_file            
             
-            path_pop_img_year = path_to_population_image + "/" + year + "_population.tif"
+            path_pop_img_year = os.path.join(path_to_population_image, year + "_population.tif")
            
-            try:  
-                (
+            (
                     dataset_pop,
                     xmin_pop,
                     xmax_pop,
                     ymin_pop,
                     ymax_pop,
-                ) = convert_one_band_raster_to_mappable(path_pop_img_year)
-            except:
-                path_img = path_to_population_image.replace('Groupe 3 - Marchés Alimentaires/','')
-                path_pop_img_year = './'+ path_img + "/" + year + "_population.tif"
-                (
-                    dataset_pop,
-                    xmin_pop,
-                    xmax_pop,
-                    ymin_pop,
-                    ymax_pop,
-                ) = convert_one_band_raster_to_mappable(path_pop_img_year)
+            ) = convert_one_band_raster_to_mappable(path_pop_img_year)
                 
         dataset, xmin, xmax, ymin, ymax = convert_one_band_raster_to_mappable(
             data_file_name
