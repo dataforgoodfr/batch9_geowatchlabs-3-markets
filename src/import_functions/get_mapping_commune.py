@@ -55,15 +55,19 @@ def get_mapping_commune():
                                                   'ADM2_REFNA':'MOUGHATAA_1',
                                                   'X.1':'MOUGHATAA_2',
                                                   'ID_2':'MOUGHATAA_ID'})
+    columns = pd.read_csv("./columns.csv")
+    list_file = get_list_of_data_files('Mauritania FSMS data', 'sav')
     
-    if False:
-        list_file = get_list_of_data_files('Mauritania FSMS data', 'sav')
-        f = 0
+    #order is not always sorted
+    list_file.sort()
+
+    for f in range(len(list_file)):
+        
         data, meta =  pyreadstat.read_sav(list_file[f],
                                           apply_value_formats=True, encoding="ISO-8859-1")
         
-        data = data[['MOUGHATAA', 'COMMUNE']]
-        data = data.rename(columns={'COMMUNE':'COMMUNE_ID'})
+        data = data[[columns.loc[f,'moughataa'], columns.loc[f,'commune']]]
+        data = data.rename(columns={ columns.loc[f,'commune']:'COMMUNE_ID', columns.loc[f,'moughataa'] : 'MOUGHATAA'})
         data['COMMUNE_ID'] = [str(int(val)) for val in data['COMMUNE_ID']]
         
         data = data.merge(commune_final, on = 'COMMUNE_ID', how = 'left')
@@ -72,5 +76,6 @@ def get_mapping_commune():
         data_moughataa = data[['MOUGHATAA']].drop_duplicates()
         data_moughataa['MOUGHATAA_ID'] = data_moughataa['MOUGHATAA']
         data_moughataa = data_moughataa.merge(moughC, on = 'MOUGHATAA_ID', how = 'left')
-    
+    	
+        break
     return(commune_final)
