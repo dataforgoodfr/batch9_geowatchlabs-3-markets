@@ -195,6 +195,25 @@ def standardize_date(date):
             return np.nan
 
 
+def standardize_bool_hors_nk(hors_nk_str):
+    """This column contains string while it could be a boolean. To ease future data manipulation,
+    let's convert it to a boolean, with a value of 1 if the data is not in Nouakchott, and 0 is the
+    data is from Nouakchott. It returns None if we can't recognize the string in argument.
+
+    Args:
+        hors_nk_str (str): string in the column
+
+    Returns:
+        boolean (int): 0 or 1.
+    """
+    if hors_nk_str == "Hors Nouakchott":
+        return 1
+    if hors_nk_str == "Nouakchott":
+        return 0
+    else:
+        return None
+
+
 if __name__ == "__main__":
     df = preprocess_FSMS_files_with_yields_and_prices()
     df.to_csv("./standardized_aggregated_dataset.csv")
