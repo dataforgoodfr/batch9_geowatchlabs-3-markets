@@ -214,6 +214,23 @@ def standardize_bool_hors_nk(hors_nk_str):
         return None
 
 
+def standardize_moughataa_commune_float(str_name):
+    """ Checks if the name could be a float by trying to cast it.
+    If it is, then we must replace the value by None.
+
+    Args:
+        str_name (str): name of the moughataa or commune.
+
+    Returns:
+        str_name (str): original name or None.
+    """
+    try:
+        float_name = float(str_name)
+        return None
+    except Exception as e:
+        return str_name
+
+
 if __name__ == "__main__":
     df = preprocess_FSMS_files_with_yields_and_prices()
     df.to_csv("./standardized_aggregated_dataset.csv")
