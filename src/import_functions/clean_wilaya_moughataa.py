@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-import geopandas as gpd
-import matplotlib.cm as cm
-import matplotlib.pyplot as plt
-import descartes
 import jellyfish
-from shapely import geometry
-from shapely.geometry import Point
-from shapely.geometry.polygon import Polygon
-
-
-file_agg = './aggregated_match_for_FSMS_files_with_yields.csv'
-file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price_hl.csv'
-file_agg = './standardized_aggregated_dataset.csv'
-
-df_raw = pd.read_csv(file_agg)
-
-df = df_raw.dropna(subset={'month'})
 
 def find_closest_string(list_string, list_candidate, no_perfect_match=True):
     list_df = []
@@ -124,12 +108,24 @@ def clean_wilaya_col(df):
     df.loc[df['wilaya'] == 'HODH_ECHARGUI', 'wilaya'] = 'HODH_ECHARGHI'
     
     return(df)
-    
-list_moughataa = df.moughataa.unique()
-list_wilaya = df.wilaya.unique()
 
-df2 = clean_moughataa_col(df)
-df2 = clean_wilaya_col(df2)
+#
+#    EXAMPLE
+#    
+ 
+#file_agg = './aggregated_match_for_FSMS_files_with_yields.csv'
+#file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price_hl.csv'
+#file_agg = './standardized_aggregated_dataset.csv'
 
-list_moughataa2 = df2.moughataa.unique()
-list_wilaya2 = df2.wilaya.unique()
+#df_raw = pd.read_csv(file_agg)
+
+#df = df_raw.dropna(subset={'month'})
+
+#list_moughataa = df.moughataa.unique()
+#list_wilaya = df.wilaya.unique()
+
+#df2 = clean_moughataa_col(df)
+#df2 = clean_wilaya_col(df2)
+
+#list_moughataa2 = df2.moughataa.unique()
+#list_wilaya2 = df2.wilaya.unique()
