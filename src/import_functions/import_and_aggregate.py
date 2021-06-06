@@ -1,5 +1,6 @@
 from import_functions.auxiliary_function_for_importing_data import *
 import numpy as np
+import mpu
 
 from import_functions.import_prices import import_prices
 from import_functions.import_yields import import_commune_yields, join_yields
@@ -140,14 +141,22 @@ def import_dataset(
     historical_data_files_list = get_list_of_data_files(
         historical_data_files_path, ".tif"
     )
-    commune_to_yield_avg_by_year_by_crop, commune_dict = import_commune_yields(
-        historical_data_files_list, path_to_population_image
-    )
-
-    commune_to_yield_avg_by_year_by_crop.to_csv(
-            'commune_to_yield_avg_by_year_by_crop.csv', sep=",", index=False
-            )
-    commune_dict.to_csv('commune_dict.csv', sep=",", index=False)
+    
+    file_commune_yield = 'commune_to_yield_avg_by_year_by_crop.pickle'
+    file_commune_dict = 'commune_dict.pickle'
+    
+    if os.path.exists(file_commune_yield) & os.path.exists(file_commune_dict):
+        commune_to_yield_avg_by_year_by_crop = mpu.io.read(file_commune_yield)
+        commune_dict = mpu.io.read(file_commune_dict)
+    else:
+        commune_to_yield_avg_by_year_by_crop, commune_dict = import_commune_yields(
+        historical_data_files_list, path_to_population_image)
+    
+        mpu.io.write(file_commune_dict, commune_dict)
+    
+        mpu.io.write(file_commune_yield, 
+                 commune_to_yield_avg_by_year_by_crop)
+        
     
     match = join_yields(match, commune_to_yield_avg_by_year_by_crop, commune_dict)
     

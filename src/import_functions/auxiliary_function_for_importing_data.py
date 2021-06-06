@@ -7,6 +7,7 @@ import os.path
 from pathlib import Path
 import errno
 import jellyfish
+import json
 
 
 def unzip_data(folder_name):
