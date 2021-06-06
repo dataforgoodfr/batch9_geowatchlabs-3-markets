@@ -1,5 +1,8 @@
 
 import os 
+import shutil
+from pathlib import Path
+home = str(Path.home())
 
 #os.chdir('C:/Users/eurhope/Desktop/DFG/geowatchlab/3_prix_alim/batch9_geowatchlabs-3-markets/src')
 
@@ -10,6 +13,8 @@ import os
 from import_functions.import_and_aggregate import *
 # bug
 import_dataset()
+output_file = 'aggregated_match_for_FSMS_files_with_yields_with_price.csv'
+shutil.copy(output_file, home + '/' + output_file)
 
 from preprocessing.preprocessing import *
 
