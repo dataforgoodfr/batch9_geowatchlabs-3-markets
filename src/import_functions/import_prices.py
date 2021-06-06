@@ -40,22 +40,33 @@ def import_prices(
     price_data_clean = prices_data_clean(price_data)
 
     month_to_nb = month_to_nb
-    df_aggregated_match_for_FSMS_files_with_yields["id"] = [
-        str(df_aggregated_match_for_FSMS_files_with_yields.loc[i, "year"])
+    
+    df = df_aggregated_match_for_FSMS_files_with_yields.reset_index()
+   
+    def ifnone_nan(string):
+        if string is None:
+            return('nan')
+        elif string == 'None':
+            return('nan')
+        else:
+            return(string)
+                    
+    df["id"] = [
+        str(df.loc[i, "year"])
         + "-"
         + month_to_nb[
-            str(df_aggregated_match_for_FSMS_files_with_yields.loc[i, "month"])
+            ifnone_nan(str(df.loc[i, "month"]))
         ]
-        + str(df_aggregated_match_for_FSMS_files_with_yields.loc[i, "wilaya"])
-        for i in range(df_aggregated_match_for_FSMS_files_with_yields.shape[0])
+        + str(df.loc[i, "wilaya"])
+        for i in range(df.shape[0])
     ]
 
-    df = pd.merge(
-        df_aggregated_match_for_FSMS_files_with_yields,
+    data = pd.merge(
+        df,
         price_data_clean,
         left_on="id",
         right_on="id",
         how="left",
     )
-    df = df.drop(columns=["id"])
-    return df
+    data = data.drop(columns=["id"])
+    return data
