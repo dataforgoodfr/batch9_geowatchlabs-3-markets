@@ -41,7 +41,7 @@ def preprocess_FSMS_files_with_yields_and_prices(
     df_aggregated_file = df_aggregated_file.rename(columns={"id": "price_id"})
 
     df_aggregated_file["Scol"] = standardize_education_level(df_aggregated_file["Scol"])
-    df_aggregated_file["Tailmen"] = df_aggregated_file["Tailmen"].apply(
+    df_aggregated_file["Tailmen_range"] = df_aggregated_file["Tailmen"].apply(
         lambda row: standardize_tailmen(row)
     )
     df_aggregated_file = df_aggregated_file.drop(columns=["cdatsaisie"])
