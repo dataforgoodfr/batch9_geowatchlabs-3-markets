@@ -89,7 +89,8 @@ def import_dataset(
     data_files_list = get_list_of_data_files(mauritania_FSMS_data_zipfile, ".sav")
     nb_valid_files = 0
 
-    equivalent_columns_table = pd.read_csv(columns_csv_path, sep=",", header=0)
+    equivalent_columns_table = pd.read_csv(columns_csv_path,
+                                           sep=";", header=0)
     target_columns = [
         col for col in equivalent_columns_table.columns if str(col) != "nan"
     ]
@@ -134,6 +135,8 @@ def import_dataset(
     match["year"] = match["Path"].apply(extract_year_from_filename)
     match["month"] = match["Path"].apply(extract_month_from_filename)
 
+    test = match['moughataa']
+    
     historical_data_files_list = get_list_of_data_files(
         historical_data_files_path, ".tif"
     )
@@ -141,6 +144,11 @@ def import_dataset(
         historical_data_files_list, path_to_population_image
     )
 
+    commune_to_yield_avg_by_year_by_crop.to_csv(
+            'commune_to_yield_avg_by_year_by_crop.csv', sep=",", index=False
+            )
+    commune_dict.to_csv('commune_dict.csv', sep=",", index=False)
+    
     match = join_yields(match, commune_to_yield_avg_by_year_by_crop, commune_dict)
     
     clean_moughataa_column(match, commune_dict)
