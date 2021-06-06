@@ -3,11 +3,27 @@ import os
 
 #os.chdir('C:/Users/eurhope/Desktop/DFG/geowatchlab/3_prix_alim/batch9_geowatchlabs-3-markets/src')
 
+#
+# MAKE DATA FROM RAW FILES
+#
+
+from import_functions.import_and_aggregate import *
+# bug
+import_dataset()
+
+from preprocessing.preprocessing import *
+
+preprocess_FSMS_files_with_yields_and_prices()
+
+#
+# IMPORT DATA
+#
+
 from import_functions.get_agricultural_geo import *
 from import_functions.clean_wilaya_moughataa import *
 
 file_agg = './aggregated_match_for_FSMS_files_with_yields.csv'
-file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price_hl.csv'
+file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price.csv'
 file_agg = './standardized_aggregated_dataset.csv'
 
 df_raw = pd.read_csv(file_agg)
