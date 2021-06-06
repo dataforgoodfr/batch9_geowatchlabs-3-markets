@@ -14,6 +14,7 @@ __pycache__/
 *.tif
 *.json
 *.geojson
+*.pickle
 
 # exclude data folder
 src/Mauritania FSMS data/
