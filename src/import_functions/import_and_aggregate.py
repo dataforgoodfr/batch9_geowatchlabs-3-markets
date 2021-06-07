@@ -124,7 +124,7 @@ def import_dataset(
                 
                 for i in range(len(data.index)):
                     s = data.loc[i,'coord'] 
-                    data.loc[i,'Latitude'], data.loc[i,'Longitude'] = extract_lat_lon(s)
+                    data.loc[i,'latitude'], data.loc[i,'longitude'] = extract_lat_lon(s)
         
         if not meta is None:
             nb_valid_files += 1
