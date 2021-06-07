@@ -2,7 +2,8 @@
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!
 #
-# HOW TO GET LATITUDE AND LONGITUDE FROM GPS COORD ?
+# HOW TO GET LATITUDE AND LONGITUDE FROM GPS COORD ? 
+# SOLUTION FOUND TO BE INCLUDED IN WORKFLOW (see below)
 #
 # !!!!!!!!!!!!!!!!!!!!!
 
@@ -50,23 +51,14 @@ def clean_gps_coord(string):
     string = string.replace('&lt;/coordinates&gt;&lt;/Point&gt;','')
     return(string)
 
+def extract_latitude(string):    
+     lon = string.split(',', 2)[0] 
+     lat = string.split(',', 2)[1] 
+     return lat, lon
+
+
 data['coord'] = data['GPScoord'].apply(clean_gps_coord)
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!
-#
-# HOW TO GET LATITUDE AND LONGITUDE FROM GPS COORD ?
-#
-# !!!!!!!!!!!!!!!!!!!!!
-
-from auromat.coordinates.transform import ecef2Geodetic
-ecef2Geodetic(-12.4381790776, 16.6586663039, 93.6809599455)
-
-data.loc[0,'coord']
-data.loc[0,'GPScoord']
-
-
-from pykml import parser
-
-root = parser.fromstring(data.loc[0,'GPScoord'])
-
-# columns description
+for i in range(len(data.index)):
+    s = data.loc[i,'coord'] 
+    data.loc[i,'Latitude'],  data.loc[i,'Longitude'] = extract_latitude(s)
