@@ -105,7 +105,27 @@ def import_dataset(
         print(round(data_file_index / len(data_files_list) * 100), " %")
         data_file_name = data_files_list[data_file_index]
         data, meta = get_data_with_filename(data_file_name)
-
+        
+        year_file = extract_year_from_filename(data_file_name)
+        
+        if year_file == 2012:
+            if 'GPScoord' in data.columns:
+                def clean_gps_coord(string):
+                    string = string.replace('&lt;Point&gt;&lt;coordinates&gt;','')
+                    string = string.replace('&lt;/coordinates&gt;&lt;/Point&gt;','')
+                    return(string)
+                
+                def extract_lat_lon(string):    
+                     lon = string.split(',', 2)[0] 
+                     lat = string.split(',', 2)[1] 
+                     return lat, lon
+                                
+                data['coord'] = data['GPScoord'].apply(clean_gps_coord)
+                
+                for i in range(len(data.index)):
+                    s = data.loc[i,'coord'] 
+                    data.loc[i,'Latitude'], data.loc[i,'Longitude'] = extract_lat_lon(s)
+        
         if not meta is None:
             nb_valid_files += 1
 
