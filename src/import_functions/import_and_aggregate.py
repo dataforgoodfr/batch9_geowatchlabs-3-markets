@@ -108,7 +108,7 @@ def import_dataset(
         
         year_file = extract_year_from_filename(data_file_name)
         
-        if year_file == 2012:
+        if year_file == '2012':
             if 'GPScoord' in data.columns:
                 def clean_gps_coord(string):
                     string = string.replace('&lt;Point&gt;&lt;coordinates&gt;','')
