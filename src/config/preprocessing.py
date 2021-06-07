@@ -56,6 +56,7 @@ preprocessing_FSMS_files_with_yields_types = {
     "TxDep": "float64",
     "Equiv_ad": "float64",
     "Tailmen": "category",
+    "Tailmen_range": "category",
     "Q2_5": "float64",
     "HWDDS": "float64",
     "Pondérations": "float64",
@@ -101,7 +102,12 @@ preprocessing_FSMS_files_with_yields_types = {
     "Sugar - Retail": "float64",
     "Wheat - Retail": "float64",
     "Wheat flour - Retail": "float64",
-    "Wheat meal - Retail": "float64",
+    "Wheat meal - Retail": "float64",    
+    "revenu1": "float64",
+    "revenu2": "float64",
+    "revenu3": "float64",
+    "revenu_mens": "float64",
+    "revenu_percap": "float64",    
 }
 
 education_level_standardization_origin = [

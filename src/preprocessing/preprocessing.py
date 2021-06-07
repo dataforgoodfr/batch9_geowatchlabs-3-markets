@@ -29,29 +29,47 @@ def preprocess_FSMS_files_with_yields_and_prices(
         home_path = str(Path.home())
     path_to_file = home_path + csv_file
     df_aggregated_file = pd.read_csv(path_to_file, low_memory=False)
-    df_aggregated_file.drop(columns=["Unnamed: 0", "Unnamed: 0.1"], inplace=True)
+    
+    if ("Unnamed: 0" in df_aggregated_file.columns):
+        df_aggregated_file.drop(columns=["Unnamed: 0"], inplace=True)
+    if ("Unnamed: 0.1" in df_aggregated_file.columns):
+        df_aggregated_file.drop(columns=["Unnamed: 0.1"], inplace=True)
+        
     columns = []
     for col in df_aggregated_file.columns.to_list():
         new_col = col.replace("$", "")
         columns.append(new_col)
+        
     df_aggregated_file.columns = columns
-    df_aggregated_file = df_aggregated_file.astype(
-        preprocessing_FSMS_files_with_yields_types
-    )
+    try:
+        df_aggregated_file = df_aggregated_file.astype(
+            preprocessing_FSMS_files_with_yields_types
+        )
+    except:
+        pass
     df_aggregated_file = df_aggregated_file.rename(columns={"id": "price_id"})
 
     df_aggregated_file["Scol"] = standardize_education_level(df_aggregated_file["Scol"])
-    df_aggregated_file["Tailmen_range"] = df_aggregated_file["Tailmen"].apply(
-        lambda row: standardize_tailmen(row)
-    )
-    df_aggregated_file = df_aggregated_file.drop(columns=["cdatsaisie"])
-    df_aggregated_file["date"] = df_aggregated_file["date"].apply(
-        lambda row: standardize_date(row)
-    )
-    df_aggregated_file["date"] = pd.to_datetime(
-        df_aggregated_file["date"], format="%Y-%m-%d", errors="coerce"
-    )
-    df_aggregated_file = fill_lat_lon(df_aggregated_file)
+    try:
+        df_aggregated_file["Tailmen_range"] = df_aggregated_file["Tailmen"].apply(
+            lambda row: standardize_tailmen(row)
+        )
+    except:
+        pass
+    try:
+        df_aggregated_file = df_aggregated_file.drop(columns=["cdatsaisie"])
+        df_aggregated_file["date"] = df_aggregated_file["date"].apply(
+            lambda row: standardize_date(row)
+        )
+    except:
+        pass
+    try:
+        df_aggregated_file["date"] = pd.to_datetime(
+            df_aggregated_file["date"], format="%Y-%m-%d", errors="coerce"
+        )
+        df_aggregated_file = fill_lat_lon(df_aggregated_file)
+    except:
+        pass
     return df_aggregated_file
 
 

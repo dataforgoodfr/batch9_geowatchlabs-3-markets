@@ -1,6 +1,8 @@
 
 import os 
 import shutil
+import numpy as np
+import pandas as pd
 from pathlib import Path
 home = str(Path.home())
 
@@ -12,13 +14,13 @@ home = str(Path.home())
 
 from import_functions.import_and_aggregate import *
 # bug
-import_dataset()
+data = import_dataset()
 output_file = 'aggregated_match_for_FSMS_files_with_yields_with_price.csv'
 shutil.copy(output_file, home + '/' + output_file)
 
 from preprocessing.preprocessing import *
 
-preprocess_FSMS_files_with_yields_and_prices()
+df_raw = preprocess_FSMS_files_with_yields_and_prices()
 
 #
 # IMPORT DATA
@@ -28,10 +30,10 @@ from import_functions.get_agricultural_geo import *
 from import_functions.clean_wilaya_moughataa import *
 
 file_agg = './aggregated_match_for_FSMS_files_with_yields.csv'
-file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price.csv'
 file_agg = './standardized_aggregated_dataset.csv'
+file_agg = './aggregated_match_for_FSMS_files_with_yields_with_price.csv'
 
-df_raw = pd.read_csv(file_agg)
+#df_raw = pd.read_csv(file_agg)
 
 #
 # CLEAN FROM MONTH
@@ -56,9 +58,27 @@ list_wilaya2 = df2.wilaya.unique()
 #
 # MAKE HOUSEHOLD GROUPS
 #
+col='revenu_mens'
 
-income_col = df2.columns[df2.columns.str.contains('per.source')]
-df2['income'] = df2[income_col].sum(axis=1)
+
+
+test = pd.DataFrame(
+            {
+                "Mean": [np.mean(df2[col])],
+                "Min": [np.min(df2[col])],
+                "Q1": [np.quantile(df2[col], 0.25, axis=0)],
+                "Median": [np.median(df2[col])],
+                "Q3": [np.quantile(df2[col], 0.75, axis=0)],
+                "Max": [np.max(df2[col])],
+            })
+    
+                   
+#income_col = df2.columns[df2.columns.str.contains('per.source')]
+#df2['income'] = df2[income_col].sum(axis=1)
+
+
+
+
 
 df2_11 = df2[df2['year'] == 2011]
 
