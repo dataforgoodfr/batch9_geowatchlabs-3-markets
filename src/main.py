@@ -43,6 +43,13 @@ df = df_raw.dropna(subset={'month'})
 df = df[df['month'].isin(['Decembre', 'Juin'])]
 
 #
+# remove price columns
+#
+df = df.drop(columns={'price', 'category', 'cmid', 'ptid', 'umid',
+                      'catid', 'sn', 'currency', 'unit', 'cmname',
+                      'mktname', 'mktid'})
+df = df.drop_duplicates()
+#
 # CLEAN WILAYA AND MOUGHATAA NAMES
 #
 
@@ -55,10 +62,21 @@ df2 = clean_wilaya_col(df2)
 list_moughataa2 = df2.moughataa.unique()
 list_wilaya2 = df2.wilaya.unique()
 
+df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
 #
 # MAKE HOUSEHOLD GROUPS
 #
-col='revenu_mens'
+
+cols = df2.columns
+revenu_col = list(cols[cols.str.contains('revenu')])
+col_interest = ['ident', 'year', 'month',
+                'wilaya', 'moughataa', 'commune', 'milieu', 'latitude', 'longitude',
+                'LHZ', 'fcs', 'csi', 
+                'Nb_hom', 'Nb_fem','TxDep', 'Equiv_ad'] + revenu_col
+                
+col_crop = []
+
+df3 = df2[col_interest]
 
 
 
