@@ -177,5 +177,5 @@ def impute_communes(features=feature_cols, aggregated_file=None):
         tmp_df_aggregated_file, columns_to_decode, label_encoded_features
     )
 
-    final_df = pd.concat([tmp_df_aggregated_file_predict, tmp_df_aggregated_file])
+    final_df = pd.concat([tmp_df_aggregated_file_predict, tmp_df_aggregated_file]).drop(columns=["predicted_commune_num"])
     return final_df

@@ -29,17 +29,17 @@ def preprocess_FSMS_files_with_yields_and_prices(
         home_path = str(Path.home())
     path_to_file = home_path + csv_file
     df_aggregated_file = pd.read_csv(path_to_file, low_memory=False)
-    
-    if ("Unnamed: 0" in df_aggregated_file.columns):
+
+    if "Unnamed: 0" in df_aggregated_file.columns:
         df_aggregated_file.drop(columns=["Unnamed: 0"], inplace=True)
-    if ("Unnamed: 0.1" in df_aggregated_file.columns):
+    if "Unnamed: 0.1" in df_aggregated_file.columns:
         df_aggregated_file.drop(columns=["Unnamed: 0.1"], inplace=True)
-        
+
     columns = []
     for col in df_aggregated_file.columns.to_list():
         new_col = col.replace("$", "")
         columns.append(new_col)
-        
+
     df_aggregated_file.columns = columns
     try:
         df_aggregated_file = df_aggregated_file.astype(
@@ -233,7 +233,7 @@ def standardize_bool_hors_nk(hors_nk_str):
 
 
 def standardize_moughataa_commune_float(str_name):
-    """ Checks if the name could be a float by trying to cast it.
+    """Checks if the name could be a float by trying to cast it.
     If it is, then we must replace the value by None.
 
     Args:
