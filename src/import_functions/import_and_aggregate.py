@@ -92,6 +92,11 @@ def import_dataset(
 
     equivalent_columns_table = pd.read_csv(columns_csv_path,
                                            sep=";", header=0)
+    
+    if len(equivalent_columns_table.columns) == 1:
+        equivalent_columns_table = pd.read_csv(columns_csv_path,
+                                               sep=",", header=0)
+    
     target_columns = [
         col for col in equivalent_columns_table.columns if str(col) != "nan"
     ]
