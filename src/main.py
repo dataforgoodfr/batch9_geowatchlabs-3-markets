@@ -13,7 +13,7 @@ home = str(Path.home())
 #
 
 from import_functions.import_and_aggregate import *
-# bug
+
 data = import_dataset()
 output_file = 'aggregated_match_for_FSMS_files_with_yields_with_price.csv'
 shutil.copy(output_file, home + '/' + output_file)
@@ -69,7 +69,7 @@ df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
 #
 
 cols = df2.columns
-revenu_col = list(cols[cols.str.contains('revenu')])
+revenu_col = list(cols[cols.str.contains('revenu|rev')])
 col_interest = ['ident', 'year', 'month',
                 'wilaya', 'moughataa', 'commune', 'milieu', 'latitude', 'longitude',
                 'LHZ', 'fcs', 'csi', 
@@ -77,26 +77,64 @@ col_interest = ['ident', 'year', 'month',
                 
 col_crop = []
 
-df3 = df2[col_interest]
+dftest= df2[df2['year'] == 2011][['year', 'month', 'rev_percap', 'revenu_mens', 'revenu1']] 
 
+df2a = df2[col_interest]
+df2a = df3.dropna(subset={'rev_percap'})
 
+df2a = df2a[df2a['month'].isin(['Juin'])]
 
-test = pd.DataFrame(
-            {
-                "Mean": [np.mean(df2[col])],
-                "Min": [np.min(df2[col])],
-                "Q1": [np.quantile(df2[col], 0.25, axis=0)],
-                "Median": [np.median(df2[col])],
-                "Q3": [np.quantile(df2[col], 0.75, axis=0)],
-                "Max": [np.max(df2[col])],
-            })
+col = 'rev_percap'
+
+list_year = [2012, 2013, 2014, 2015]
+list_data_year = []
+
+for y in list_year:
     
-                   
+    df3 = df2a[df2a['year'] == y]    
+
+    rev = pd.DataFrame(
+                {
+                    "Mean": [np.mean(df3[col])],
+                    "Min": [np.min(df3[col])],
+                    "Max": [np.max(df3[col])],
+                    "Q1": [np.quantile(df3[col], 0.25, axis=0)],
+                    "Q2": [np.quantile(df3[col], 0.5, axis=0)],               
+                    "Q3": [np.quantile(df3[col], 0.75, axis=0)],               
+                })        
+        
+    df3['rev_catg'] = np.select([(df3.rev_percap < rev.loc[0,'Q1']),
+                                (df3.rev_percap >=  rev.loc[0,'Q1']) & (df3.rev_percap <  rev.loc[0,'Q2']),
+                                 (df3.rev_percap >= rev.loc[0,'Q2']) & (df3.rev_percap <  rev.loc[0,'Q3']),
+                                (df3.rev_percap >=  rev.loc[0,'Q3'])],
+                                ["1", "2", "3", "4"])
+    
+    list_data_year.append(df3)
+
+df3 = pd.concat(list_data_year)
+df3['house_catg'] = df3['moughataa'] + df3['rev_catg']
+
+data = df3.groupby(['house_catg', 'year'])['fcs', 'rev_percap'].mean().reset_index(drop=False)
+  
+datac = df3.value_counts(['house_catg', 'year']).reset_index(drop=False)
+datac.columns = ['house_catg', 'year', 'n']
+
+data = data.merge(datac, on = ['house_catg', 'year'], how = 'left')
+
 #income_col = df2.columns[df2.columns.str.contains('per.source')]
 #df2['income'] = df2[income_col].sum(axis=1)
 
 
+#
+# PANEL
+#
 
+from linearmodels import PanelOLS
+mod = PanelOLS(data, fcs, data.rev_percap, entity_effects=True)
+res = mod.fit(cov_type='clustered', cluster_entity=True)
+
+# revenu absent en juin 2011??
+# moughataa a determiner avec latitude longitude en dec 2012
 
 
 df2_11 = df2[df2['year'] == 2011]
