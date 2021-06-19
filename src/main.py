@@ -85,50 +85,66 @@ col_interest = ['ident', 'year', 'month',
                 
 col_crop = []
 
-dftest= df2[df2['year'] == 2011][['year', 'month', 'rev_percap', 'revenu_mens', 'revenu1']] 
+dftest= df2[df2['year'] == 2012][['year', 'month', 'rev_percap', 'revenu_mens', 'revenu1']] 
 
 df2a = df2[col_interest]
-df2a = df3.dropna(subset={'rev_percap'})
+df2a = df2a.dropna(subset={'rev_percap'})
 
-df2a = df2a[df2a['month'].isin(['Juin'])]
+#df2a = df2a[df2a['month'].isin(['Juin'])]
 
 col = 'rev_percap'
 
 list_year = [2012, 2013, 2014, 2015]
+list_month = ['Decembre', 'Juin']
 list_data_year = []
 
 for y in list_year:
+    for m in list_month:
     
-    df3 = df2a[df2a['year'] == y]    
-
-    rev = pd.DataFrame(
-                {
-                    "Mean": [np.mean(df3[col])],
-                    "Min": [np.min(df3[col])],
-                    "Max": [np.max(df3[col])],
-                    "Q1": [np.quantile(df3[col], 0.25, axis=0)],
-                    "Q2": [np.quantile(df3[col], 0.5, axis=0)],               
-                    "Q3": [np.quantile(df3[col], 0.75, axis=0)],               
-                })        
+        df3 = df2a[(df2a['year'] == y) & (df2a['month'] == m)]    
+    
+        rev = pd.DataFrame(
+                    {
+                        "Mean": [np.mean(df3[col])],
+                        "Min": [np.min(df3[col])],
+                        "Max": [np.max(df3[col])],
+                        "Q1": [np.quantile(df3[col], 0.25, axis=0)],
+                        "Q2": [np.quantile(df3[col], 0.5, axis=0)],               
+                        "Q3": [np.quantile(df3[col], 0.75, axis=0)],               
+                    })        
+            
+        df3['rev_catg'] = np.select([(df3.rev_percap < rev.loc[0,'Q1']),
+                                    (df3.rev_percap >=  rev.loc[0,'Q1']) & (df3.rev_percap <  rev.loc[0,'Q2']),
+                                     (df3.rev_percap >= rev.loc[0,'Q2']) & (df3.rev_percap <  rev.loc[0,'Q3']),
+                                    (df3.rev_percap >=  rev.loc[0,'Q3'])],
+                                    ["1", "2", "3", "4"])
         
-    df3['rev_catg'] = np.select([(df3.rev_percap < rev.loc[0,'Q1']),
-                                (df3.rev_percap >=  rev.loc[0,'Q1']) & (df3.rev_percap <  rev.loc[0,'Q2']),
-                                 (df3.rev_percap >= rev.loc[0,'Q2']) & (df3.rev_percap <  rev.loc[0,'Q3']),
-                                (df3.rev_percap >=  rev.loc[0,'Q3'])],
-                                ["1", "2", "3", "4"])
-    
-    list_data_year.append(df3)
+        list_data_year.append(df3)
 
 df3 = pd.concat(list_data_year)
 df3['house_catg'] = df3['moughataa'] + df3['rev_catg']
 
-data = df3.groupby(['house_catg', 'year'])['fcs', 'rev_percap'].mean().reset_index(drop=False)
+data = df3.groupby(['house_catg', 'year', 'month', 'moughataa', 'rev_catg'])['fcs', 'rev_percap'].mean().reset_index(drop=False)
   
-datac = df3.value_counts(['house_catg', 'year']).reset_index(drop=False)
-datac.columns = ['house_catg', 'year', 'n']
+datac = df3.value_counts(['house_catg', 'year', 'month']).reset_index(drop=False)
+datac.columns = ['house_catg', 'year', 'month', 'n']
 
-data = data.merge(datac, on = ['house_catg', 'year'], how = 'left')
+data = data.merge(datac, on = ['house_catg', 'year', 'month'], how = 'left')
 
+#
+# CREATE TIME COLUMN
+# 
+
+time_df = data[['year', 'month']].drop_duplicates()
+time_df = time_df.sort_values('month', ascending=False).sort_values('year')
+time_df = time_df.reset_index(drop=True).reset_index(drop=False)
+time_df.columns = ['time', 'year', 'month']
+
+data = data.merge(time_df, on = ['year', 'month'], how = 'left')
+data = data.sort_values('time').reset_index(drop=True)
+
+data = data.set_index(['house_catg', 'time'])
+data['month_Decembre'] = pd.get_dummies(data)['month_Decembre']
 #income_col = df2.columns[df2.columns.str.contains('per.source')]
 #df2['income'] = df2[income_col].sum(axis=1)
 
@@ -136,58 +152,12 @@ data = data.merge(datac, on = ['house_catg', 'year'], how = 'left')
 #
 # PANEL
 #
+from linearmodels import FirstDifferenceOLS
 
-from pandas.stats.plm import PanelOLS
-
-data['year'] = pd.to_datetime(data['year'], format='%Y')
-
-data = data.set_index('year', append=True)
-
-model  = pd.stats.plm.PanelOLS(y=data['fsc'],x=data[['rev_percap']])
-
-print model
-
-from linearmodels import PanelOLS
-mod = PanelOLS(data.fcs, data.rev_percap)
-#entity_effects=True
-pooled_res = mod.fit()
-print(pooled_res)
-
-# revenu absent en juin 2011??
-# moughataa a determiner avec latitude longitude en dec 2012
+w = data.n
+mod = FirstDifferenceOLS.from_formula('fcs ~ rev_percap + month_Decembre + EntityEffects',
+                            data = data, weights=w)
+mod.fit()
 
 
-df2_11 = df2[df2['year'] == 2011]
 
-df2_14dec = df2[(df2['year'] == 2014) & (df2['month'] == 'Decembre')]
-df2_14dec['Tot_source'].unique()
-
-df2_14jun = df2[(df2['year'] == 2014) & (df2['month'] == 'Juin')]
-df2_14jun['Tot_source'].unique()
-
-df2_15dec = df2[(df2['year'] == 2015) & (df2['month'] == 'Decembre')]
-df2_15dec['Tot_source'].unique()
-
-df2_15jun = df2[(df2['year'] == 2015) & (df2['month'] == 'Juin')]
-df2_15jun['Tot_source'].unique()
-
-df2_14dec['Tot_source'].mean()
-
-
-inc = df2_14.income.unique()
-
-import matplotlib.pyplot as plt
-
-# An "interface" to matplotlib.axes.Axes.hist() method
-n, bins, patches = plt.hist(data=df2_11, x='income',
-                            bins='auto', color='#0504aa',
-                            alpha=0.7, rwidth=0.85)
-
-n, bins, patches = plt.hist(data=df2_14, x='income',
-                            bins='auto', color='#0504aa',
-                            alpha=0.7, rwidth=0.85)
-
-# GET AGRICULTURAL MOUGHATAA
-
-moughataa_agrc = get_agricultural_moughataa()
-commune_agrc = get_agricultural_commune()
