@@ -28,6 +28,7 @@ df_raw = preprocess_FSMS_files_with_yields_and_prices()
 
 from import_functions.get_agricultural_geo import *
 from import_functions.clean_wilaya_moughataa import *
+from import_functions.fill_geo_data_dec12 import *
 
 file_agg = './aggregated_match_for_FSMS_files_with_yields.csv'
 file_agg = './standardized_aggregated_dataset.csv'
@@ -49,6 +50,13 @@ df = df.drop(columns={'price', 'category', 'cmid', 'ptid', 'umid',
                       'catid', 'sn', 'currency', 'unit', 'cmname',
                       'mktname', 'mktid'})
 df = df.drop_duplicates()
+
+# 
+# FILL LATITUDE, LONGITUDE AND MOUGHATAA FOR DEC 2012
+# 
+
+df = fill_geo_data_dec12(df)
+
 #
 # CLEAN WILAYA AND MOUGHATAA NAMES
 #
@@ -129,9 +137,21 @@ data = data.merge(datac, on = ['house_catg', 'year'], how = 'left')
 # PANEL
 #
 
+from pandas.stats.plm import PanelOLS
+
+data['year'] = pd.to_datetime(data['year'], format='%Y')
+
+data = data.set_index('year', append=True)
+
+model  = pd.stats.plm.PanelOLS(y=data['fsc'],x=data[['rev_percap']])
+
+print model
+
 from linearmodels import PanelOLS
-mod = PanelOLS(data, fcs, data.rev_percap, entity_effects=True)
-res = mod.fit(cov_type='clustered', cluster_entity=True)
+mod = PanelOLS(data.fcs, data.rev_percap)
+#entity_effects=True
+pooled_res = mod.fit()
+print(pooled_res)
 
 # revenu absent en juin 2011??
 # moughataa a determiner avec latitude longitude en dec 2012
