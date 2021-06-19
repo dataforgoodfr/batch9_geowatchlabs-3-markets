@@ -144,7 +144,11 @@ data = data.merge(time_df, on = ['year', 'month'], how = 'left')
 data = data.sort_values('time').reset_index(drop=True)
 
 data = data.set_index(['house_catg', 'time'])
+
 data['month_Decembre'] = pd.get_dummies(data)['month_Decembre']
+
+data['rev_percap'] = data['rev_percap']/1000
+
 #income_col = df2.columns[df2.columns.str.contains('per.source')]
 #df2['income'] = df2[income_col].sum(axis=1)
 
@@ -152,12 +156,33 @@ data['month_Decembre'] = pd.get_dummies(data)['month_Decembre']
 #
 # PANEL
 #
-from linearmodels import FirstDifferenceOLS
+from linearmodels import BetweenOLS
 
 w = data.n
-mod = FirstDifferenceOLS.from_formula('fcs ~ rev_percap + month_Decembre + EntityEffects',
+mod = BetweenOLS.from_formula('fcs ~ rev_percap + month_Decembre + EntityEffects',
                             data = data, weights=w)
 mod.fit()
 
+# INTERPRETATION : TO BE FULLY CHECKED
+# une augmentation de 1000 du revenu par rapport à sa moyenne sur a période
+# augmente de X le score fcs par rapport à sa moyenne sur a période
 
+#
+# ESTIMATION EXCLUDING DECEMBER
+#
 
+datajun = data[data['month'].isin(['Juin'])].reset_index(drop=False)
+datajun = datajun.drop(columns={'time'})
+time_df = datajun[['year', 'month']].drop_duplicates()
+time_df = time_df.sort_values('month', ascending=False).sort_values('year')
+time_df = time_df.reset_index(drop=True).reset_index(drop=False)
+time_df.columns = ['time', 'year', 'month']
+
+datajun = datajun.merge(time_df, on = ['year', 'month'], how = 'left')
+datajun = datajun.sort_values('time').reset_index(drop=True)
+datajun = datajun.set_index(['house_catg', 'time'])
+
+w = datajun.n
+mod = BetweenOLS.from_formula('fcs ~ rev_percap + EntityEffects',
+                            data = datajun, weights=w)
+mod.fit()
