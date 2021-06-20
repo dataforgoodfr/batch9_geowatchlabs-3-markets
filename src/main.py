@@ -183,8 +183,6 @@ PanelModel = PanelOLS.from_formula('fcs ~ 1 + rev_percap + month_Decembre + Enti
                             data = data, weights=w)
 PanelModel.fit(cov_type='robust')
 
-
-
 # INTERPRETATION : TO BE FULLY CHECKED
 # une augmentation de 1000 du revenu par rapport à sa moyenne sur a période
 # augmente de X le score fcs par rapport à sa moyenne sur a période
@@ -212,3 +210,53 @@ mod.fit(cov_type='robust')
 
 # AGRICULTURE
 
+
+# PLOTS
+
+def plot_var(dfplot, var,
+             title_plot= '',
+             statdesc=True,
+             list_var_group = ['year', 'month'],
+             n_bins=100, y_plot=0.9, maxdata=None, nrows=3, ncols=3):
+
+        
+    fig, axes = plt.subplots(nrows, ncols, figsize=(15,5), sharex=True)
+    plt.suptitle(title_plot, x = 0.05, y = y_plot,
+                 horizontalalignment= 'left', 
+                 fontsize = 12, fontweight='bold')
+    fig.tight_layout(pad = 2.5)
+    
+    for (title, group), ax in zip(dfplot.groupby(list_var_group), axes.flatten()): 
+            df = group
+            
+            statdesc_df = pd.DataFrame({
+                    "Mean": [np.mean(df[var])],
+                    "Q1": [np.quantile(df[var], 0.25, axis=0)],
+                    "Q2": [np.quantile(df[var], 0.5, axis=0)],               
+                    "Q3": [np.quantile(df[var], 0.75, axis=0)],               
+                }) 
+            mean = statdesc_df.loc[0, 'Mean']
+            q1 = statdesc_df.loc[0, 'Q1']
+            q2 = statdesc_df.loc[0, 'Q2']
+            q3 = statdesc_df.loc[0, 'Q3']
+            
+            if maxdata is not None:
+                df = df[df[var] < maxdata]
+        
+            df.hist(var,
+                        ax=ax, bins=n_bins,
+                        legend=False)
+            ax.set_title('{} {}'.format(title[0], title[1]),fontsize = 10)
+            ax.xaxis.label.set_visible(False)
+            ax.axvline(x=mean, color='red', linestyle='--')
+            ax.axvline(x=q1, color='k', linestyle='--')
+            ax.axvline(x=q2, color='k', linestyle='--')
+            ax.axvline(x=q3, color='k', linestyle='--')
+    
+    if maxdata is not None:
+        txt='Max data : %s (only used for better visualization)' % maxdata                            
+        fig.text(.5, .05, txt, ha='center')
+        
+        
+plot_var(df2a, var = 'rev_percap', title_plot = "Income per capita", maxdata=60000)
+plot_var(df2a, var = 'fcs', title_plot = "Food consumption score")
