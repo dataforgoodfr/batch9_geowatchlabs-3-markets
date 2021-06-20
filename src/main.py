@@ -248,10 +248,10 @@ def plot_var(dfplot, var,
                         legend=False)
             ax.set_title('{} {}'.format(title[0], title[1]),fontsize = 10)
             ax.xaxis.label.set_visible(False)
-            ax.axvline(x=mean, color='red', linestyle='--')
             ax.axvline(x=q1, color='k', linestyle='--')
             ax.axvline(x=q2, color='k', linestyle='--')
             ax.axvline(x=q3, color='k', linestyle='--')
+            ax.axvline(x=mean, color='red', linestyle='--')
     
     if maxdata is not None:
         txt='Max data : %s (only used for better visualization)' % maxdata                            
