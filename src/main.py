@@ -72,6 +72,25 @@ list_wilaya2 = df2.wilaya.unique()
 
 df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
 
+# 
+# ADD DATE COLUMN
+# 
+from datetime import datetime
+
+dates_df = df2[['year', 'month']].drop_duplicates().reset_index(drop=True)
+dates_df['month2'] = np.select([(dates_df.month == 'Decembre'),(dates_df.month == 'Juin')], ['12', '06'])
+
+for i in range(len(dates_df.index)):   
+    date_string = '-'.join([str(dates_df.loc[i,'year']),
+                                       dates_df.loc[i,'month2'], '01'])
+    dates_df.loc[i,'date'] = datetime.strptime(date_string, '%Y-%m-%d')
+    dates_df.loc[i,'year_month'] = ' '.join([str(dates_df.loc[i,'year']),
+                                             str(dates_df.loc[i,'month'])])
+    
+dates_df = dates_df.drop(columns={'month2'})
+
+df2b = df2.merge(dates_df, on=['year', 'month'], how='left')
+
 #
 # MAKE HOUSEHOLD GROUPS
 #
@@ -79,8 +98,10 @@ df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
 agrc_var = ['groundnut', 'millet', 'sorghum', 'maize', 'cowpea']
 
 cols = df2.columns
+colDF = pd.DataFrame(cols)
+ 
 revenu_col = list(cols[cols.str.contains('revenu|rev')])
-col_interest = ['ident', 'year', 'month',
+col_interest = ['ident', 'year', 'month', 'year_month' ,'date',
                 'wilaya', 'moughataa', 'commune', 'milieu', 'latitude', 'longitude',
                 'LHZ', 'fcs', 'csi', 
                 'Nb_hom', 'Nb_fem','TxDep', 'Equiv_ad'] + revenu_col + agrc_var
@@ -89,8 +110,8 @@ col_crop = []
 
 dftest= df2[df2['year'] == 2012][['year', 'month', 'rev_percap', 'revenu_mens', 'revenu1']] 
 
-df2a = df2[col_interest]
-df2a = df2a.dropna(subset={'rev_percap'})
+df2b = df2b[col_interest]
+df2a = df2b.dropna(subset={'rev_percap'})
 
 #df2a = df2a[df2a['month'].isin(['Juin'])]
 
@@ -213,12 +234,14 @@ mod.fit(cov_type='robust')
 
 # PLOTS
 
-def plot_var(dfplot, var,
+def plot_var(var,
              title_plot= '',
+             dfplot = df2b,
              statdesc=True,
              list_var_group = ['year', 'month'],
              n_bins=100, y_plot=0.9, maxdata=None, nrows=3, ncols=3):
-
+    
+    dfplot = dfplot.dropna(subset={var})
         
     fig, axes = plt.subplots(nrows, ncols, figsize=(15,5), sharex=True)
     plt.suptitle(title_plot, x = 0.05, y = y_plot,
@@ -258,5 +281,29 @@ def plot_var(dfplot, var,
         fig.text(.5, .05, txt, ha='center')
         
         
-plot_var(df2a, var = 'rev_percap', title_plot = "Income per capita", maxdata=60000)
-plot_var(df2a, var = 'fcs', title_plot = "Food consumption score")
+plot_var(var = 'rev_percap', title_plot = "Income per capita", maxdata=60000)
+plot_var(var = 'fcs', title_plot = "Food consumption score")
+
+import seaborn as sns
+
+def box_plot(var, color, dfplot=df2b, date='year', maxdata=None):
+    if not maxdata is None:
+        dfplot = dfplot[dfplot[var]<maxdata]
+        
+    dfplot = dfplot.sort_values(date)
+    my_colors = sns.color_palette('Set1').as_hex() 
+    my_colors = my_colors +  sns.color_palette('pastel').as_hex()
+    
+    ax = sns.boxplot(x = date, y = var, palette=my_colors,
+                     data = dfplot, hue= color)   
+    plt.legend(loc='right', bbox_to_anchor=(1.105, 0.5),
+               fontsize='xx-small',
+               borderaxespad=0)
+    plt.setp(ax.get_xticklabels(), rotation=45)
+        
+box_plot('fcs', color = 'wilaya')
+
+box_plot('fcs', color = 'month')
+
+box_plot('rev_percap', color ='wilaya', maxdata=60000)
+    
