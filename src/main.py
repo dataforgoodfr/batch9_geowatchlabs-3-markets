@@ -70,8 +70,6 @@ df2 = clean_wilaya_col(df2)
 list_moughataa2 = df2.moughataa.unique()
 list_wilaya2 = df2.wilaya.unique()
 
-df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
-
 #
 # MAKE HOUSEHOLD GROUPS
 #

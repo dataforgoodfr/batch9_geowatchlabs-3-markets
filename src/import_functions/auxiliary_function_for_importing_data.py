@@ -8,7 +8,29 @@ from pathlib import Path
 import errno
 import jellyfish
 import json
+import numpy as np
 
+def clean_gps_coord(gps_coord_str):
+    """This function aims at converting gps coords string to gps coords
+
+    Args:
+        gps_coord_str (str): string of gps coords
+
+    """
+    gps_coord_str_clean = gps_coord_str.replace('&lt;Point&gt;&lt;coordinates&gt;','')
+    gps_coord_str_clean = gps_coord_str_clean.replace('&lt;/coordinates&gt;&lt;/Point&gt;','')
+    return gps_coord_str_clean
+
+def extract_lat_lon(gps_coord_str):
+     """This function aims at converting gps coords string to lan & lat
+
+      Args:
+         gps_coord_str (str): string of gps coords
+
+     """
+     lon = gps_coord_str.split(',', 2)[0]
+     lat = gps_coord_str.split(',', 2)[1]
+     return lat, lon
 
 def unzip_data(folder_name):
     """This function aims at unzipping data in folder with folder_name.
@@ -64,9 +86,13 @@ def get_list_of_data_files(folder_name, extension):
             list_all_files.append(os.path.join(path, name))
 
     # list data files
-    list_data_file = [f for f in list_all_files if re.search(extension + "$", f)]
-
-    return list_data_file
+    list_data_file = np.array([f for f in list_all_files if re.search(extension + "$", f)])
+    
+    #sort by date
+    list_data_file_date = np.array([str(extract_year_from_filename(f)) + str(extract_month_from_filename(f)) for f in list_data_file])
+    inds = list_data_file_date.argsort()
+    list_data_file_sorted = list(list_data_file[inds])
+    return list_data_file_sorted
 
 
 def get_data_with_filename(file):
@@ -187,6 +213,25 @@ def extract_year_from_filename(filename):
     list_year = [str(n) for n in range(2010, 2016)]
     return extract_pattern_from_string(filename, pattern=list_year)
 
+def extract_month_number_from_filename(filename):
+    """Extract month number from filename with regex.
+
+    Args:
+        filename (str): file name we want to extract month from.
+
+    Returns:
+        month (str): month pattern extracted from filename.
+    """
+    list_month = ["Decembre", "Janvier", "Juillet", "Juin"]
+    month2nb = {"Decembre": "12", "Janvier": "01", "Juillet" : "07", "Juin" : "06"}
+    
+    month = extract_pattern_from_string(filename, pattern=list_month)
+    
+    if month is not None: 
+        return month2nb[month]
+    else:
+        return "13"
+
 
 def extract_month_from_filename(filename):
     """Extract month from filename with regex.
@@ -197,8 +242,8 @@ def extract_month_from_filename(filename):
     Returns:
         month (str): month pattern extracted from filename.
     """
-    list_year = ["Decembre", "Janvier", "Juillet", "Juin"]
-    return extract_pattern_from_string(filename, pattern=list_year)
+    list_month = ["Decembre", "Janvier", "Juillet", "Juin"]
+    return extract_pattern_from_string(filename, pattern=list_month)
 
 
 def clean_name(name):
@@ -210,16 +255,16 @@ def clean_name(name):
     Returns:
         name (str): cleaned name
     """
-    
+
     return name.lower().replace(" ","").replace("_","").replace("ène", "en").replace("2", "")
 
 
 def get_real_name(moughataa, commune_dict):
     """get cleaned moughataa name if indice
-    
+
     Args:
         moughataa (unknown): can be name of moughataa or indice in float or string of float
-    
+
     Returns:
         name (str): actual cleaned moughataa name
     """
