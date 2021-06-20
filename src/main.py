@@ -76,12 +76,14 @@ df2_dec12 = df2[(df2.year == 2012) & (df2.month == 'Decembre')]
 # MAKE HOUSEHOLD GROUPS
 #
 
+agrc_var = ['groundnut', 'millet', 'sorghum', 'maize', 'cowpea']
+
 cols = df2.columns
 revenu_col = list(cols[cols.str.contains('revenu|rev')])
 col_interest = ['ident', 'year', 'month',
                 'wilaya', 'moughataa', 'commune', 'milieu', 'latitude', 'longitude',
                 'LHZ', 'fcs', 'csi', 
-                'Nb_hom', 'Nb_fem','TxDep', 'Equiv_ad'] + revenu_col
+                'Nb_hom', 'Nb_fem','TxDep', 'Equiv_ad'] + revenu_col + agrc_var
                 
 col_crop = []
 
@@ -124,7 +126,9 @@ for y in list_year:
 df3 = pd.concat(list_data_year)
 df3['house_catg'] = df3['moughataa'] + df3['rev_catg']
 
-data = df3.groupby(['house_catg', 'year', 'month', 'moughataa', 'rev_catg'])['fcs', 'rev_percap'].mean().reset_index(drop=False)
+vars = ['fcs', 'rev_percap' ] + agrc_var
+
+data = df3.groupby(['house_catg', 'year', 'month', 'moughataa', 'rev_catg'])[vars].mean().reset_index(drop=False)
   
 datac = df3.value_counts(['house_catg', 'year', 'month']).reset_index(drop=False)
 datac.columns = ['house_catg', 'year', 'month', 'n']
@@ -148,7 +152,7 @@ data = data.set_index(['house_catg', 'time'])
 data['month_Decembre'] = pd.get_dummies(data)['month_Decembre']
 
 data['rev_percap'] = data['rev_percap']/1000
-
+data['year'] = pd.Categorical(data['year'])
 #income_col = df2.columns[df2.columns.str.contains('per.source')]
 #df2['income'] = df2[income_col].sum(axis=1)
 
@@ -156,12 +160,30 @@ data['rev_percap'] = data['rev_percap']/1000
 #
 # PANEL
 #
-from linearmodels import BetweenOLS
 
+from linearmodels import BetweenOLS, RandomEffects, PanelOLS
+
+# WITHIN
 w = data.n
-mod = BetweenOLS.from_formula('fcs ~ rev_percap + month_Decembre + EntityEffects',
+BetweenModel = BetweenOLS.from_formula('fcs ~ rev_percap + month_Decembre',
                             data = data, weights=w)
-mod.fit()
+BetweenModel.fit(cov_type='robust', reweight=True)
+
+# RANDOM EFFECTS
+RandomEffectsModel = RandomEffects.from_formula('fcs ~ rev_percap + year + month_Decembre',
+                            data = data, weights=w)
+REModFit = RandomEffectsModel.fit(cov_type='robust')
+REModFit
+REModFit.variance_decomposition
+REModFit.theta
+
+
+# BASIC PANEL
+PanelModel = PanelOLS.from_formula('fcs ~ 1 + rev_percap + month_Decembre + EntityEffects',
+                            data = data, weights=w)
+PanelModel.fit(cov_type='robust')
+
+
 
 # INTERPRETATION : TO BE FULLY CHECKED
 # une augmentation de 1000 du revenu par rapport à sa moyenne sur a période
@@ -183,6 +205,10 @@ datajun = datajun.sort_values('time').reset_index(drop=True)
 datajun = datajun.set_index(['house_catg', 'time'])
 
 w = datajun.n
-mod = BetweenOLS.from_formula('fcs ~ rev_percap + EntityEffects',
+mod = BetweenOLS.from_formula('fcs ~ rev_percap',
                             data = datajun, weights=w)
-mod.fit()
+mod.fit(cov_type='robust')
+
+
+# AGRICULTURE
+
