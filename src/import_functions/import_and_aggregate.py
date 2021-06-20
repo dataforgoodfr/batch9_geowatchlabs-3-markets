@@ -115,36 +115,25 @@ def import_dataset(
         
         if year_file == '2012':
             if 'GPScoord' in data.columns:
-                def clean_gps_coord(string):
-                    string = string.replace('&lt;Point&gt;&lt;coordinates&gt;','')
-                    string = string.replace('&lt;/coordinates&gt;&lt;/Point&gt;','')
-                    return(string)
                 
-                def extract_lat_lon(string):    
-                     lon = string.split(',', 2)[0] 
-                     lat = string.split(',', 2)[1] 
-                     return lat, lon
-                                
                 data['coord'] = data['GPScoord'].apply(clean_gps_coord)
-                
-                for i in range(len(data.index)):
-                    s = data.loc[i,'coord'] 
-                    data.loc[i,'latitude'], data.loc[i,'longitude'] = extract_lat_lon(s)
+                data[['latitude','longitude']] = pd.DataFrame(data['coord'].apply(extract_lat_lon).tolist(), index=data.index)
         
         if not meta is None:
             nb_valid_files += 1
 
             column_names = [col for col in meta.column_names if not col is None]
-            eq_target_columns = [
+            eq_target_column = [
                 equivalent_columns_table.loc[data_file_index, col]
                 for col in target_columns
             ]
+            
             match = match.append(
                 aggregate_matching_column_loop(
                     data,
                     column_names,
                     data_file_name,
-                    eq_target_columns,
+                    eq_target_column,
                     target_columns,
                 )
             )
@@ -153,7 +142,7 @@ def import_dataset(
                     data,
                     column_names,
                     data_file_name,
-                    eq_target_columns,
+                    eq_target_column,
                     target_columns,
                 )
             )

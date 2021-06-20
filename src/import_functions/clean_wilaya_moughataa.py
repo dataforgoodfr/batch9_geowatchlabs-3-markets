@@ -34,7 +34,7 @@ def clean_moughataa_col(df):
     
     mg_list = find_closest_string(df.moughataa.unique(), df.moughataa.unique())
     mg_list = mg_list[mg_list['dist'] == 1].reset_index()
-    
+    """
     for r in range(len(mg_list)):
         try:
             s = mg_list.loc[r, 'string']
@@ -42,12 +42,12 @@ def clean_moughataa_col(df):
         except:
             pass
     #mg_list.loc[mg_list['candidate'] == 'teyarett', 'string'] = 'teyarett'
-    
+
     try:
         mg_list = mg_list.reset_index(drop=False)
     except:
         pass
-    
+    """
     mough = pd.DataFrame({'moughataa':df.moughataa.unique()})
     
     for s in range(len(mg_list.index)):

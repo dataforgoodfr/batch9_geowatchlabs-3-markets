@@ -10,25 +10,9 @@ import pandas as pd
 
 def fill_geo_data_dec12(df):
     
-    list_file = get_list_of_data_files('Mauritania FSMS data', 'sav')
-    data, meta = pyreadstat.read_sav(list_file[5])
-    
     dfdec12 = df[(df.year == 2012) & (df.month == 'Decembre')].reset_index(drop=True)
-    dfdec12['GPScoord'] = data['GPScoord']
     
-    def clean_gps_coord(string):
-        string = string.replace('&lt;Point&gt;&lt;coordinates&gt;','')
-        string = string.replace('&lt;/coordinates&gt;&lt;/Point&gt;','')
-        return(string)
-                
-    def extract_lat_lon(string):    
-        lon = float(string.split(',', 2)[0])
-        lat = float(string.split(',', 2)[1])
-        return lat, lon
-                                
-    dfdec12['coord'] = dfdec12['GPScoord'].apply(clean_gps_coord)
-    
-    file_moughataa_new = './Moughataas_new.geojson'
+    file_moughataa_new = 'Moughataas_new.geojson'
     moughataa = gpd.read_file(file_moughataa_new)
     moughataa = moughataa[['X.1', 'ID_2', 'geometry']].reset_index(drop=True)
     moughataa.columns = ['moughataa', 'ID', 'geometry']
@@ -36,9 +20,9 @@ def fill_geo_data_dec12(df):
     geom=[]
     
     for i in range(len(dfdec12.index)):
-        s = dfdec12.loc[i,'coord'] 
-        lat, lon = extract_lat_lon(s)
-        dfdec12.loc[i,'latitude'], dfdec12.loc[i,'longitude'] = lat, lon
+
+        lat, lon = dfdec12.loc[i,'latitude'], dfdec12.loc[i,'longitude']
+
         point = Point(lon, lat)
         geom.append(point)    
   
@@ -50,7 +34,6 @@ def fill_geo_data_dec12(df):
                 dfdec12.loc[i,'moughataa'] = mg
                 break
             
-    dfdec12 = dfdec12.drop(columns = {'GPScoord','coord'})
     df_new =  df[(df.year != 2012) | (df.month != 'Decembre')]
     df_new = pd.concat([df_new, dfdec12]).reset_index(drop=True)
     
