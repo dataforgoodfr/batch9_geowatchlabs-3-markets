@@ -15,7 +15,7 @@ def prices_data_clean(df_prices):
     df_prices["id"] = df_prices["date"] + df_prices["admname"]
     df_prices = df_prices.drop(0)
     df_prices["price"] = pd.to_numeric(df_prices["price"])
-    df_prices[["id", "price", "cmname"]].pivot_table(
+    df_prices = df_prices[["id", "price", "cmname"]].pivot_table(
         index="id", columns="cmname", values="price", aggfunc="mean"
     )
     return df_prices
@@ -60,6 +60,8 @@ def import_prices(
         + str(df.loc[i, "wilaya"])
         for i in range(df.shape[0])
     ]
+
+
 
     data = pd.merge(
         df,

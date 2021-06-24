@@ -9,6 +9,8 @@ import errno
 import jellyfish
 import json
 import numpy as np
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 def clean_gps_coord(gps_coord_str):
     """This function aims at converting gps coords string to gps coords
@@ -295,3 +297,64 @@ def clean_moughataa_column(data, commune_dict):
     }
 
     data["moughataa"] = [get_real_name(name, commune_dict) for name in data["moughataa"]]
+
+
+def get_moughataa_wilaya():
+    """Get commmune.geojson data.
+
+    Returns:
+        commune_dict, commune_id, geometry (tuple): commmune.geojson data
+    """
+    try:
+        with open("Moughataas_new.geojson") as json_file:
+            data = json.load(json_file)
+
+        wilayas = [commune["properties"]["NAME_1"] for commune in data["features"]]
+        moughataas = [commune["properties"]["NAME_2"] for commune in data["features"]]
+        geometry = [
+            Polygon(commune["geometry"]["coordinates"][0][0])
+            for commune in data["features"]
+        ]
+
+        return wilayas, moughataas, geometry
+
+    except:
+        raise FileNotFoundError(
+            errno.ENOENT, os.strerror(errno.ENOENT), "Moughataas_new.geojson"
+        )
+
+def fill_moughtaa_wilaya(df):
+    """This function aims at filling missing moughataa and wilaya values.
+    If moughataa/wilaya is missing, then we impute it from the lat-lon.
+
+    Args:
+        df (pd.DataFrame): DataFrame we want to impute the values in.
+
+    Returns:
+        df (pd.DataFrame): filled DataFrame.
+    """
+    
+    wilayas, moughataas, geometry = get_moughataa_wilaya()
+    
+    for i in df[pd.isna(df[["moughataa","wilaya"]]).any(1)].index:
+        lat = df.loc[i,"latitude"]
+        lon = df.loc[i,"longitude"]
+
+        if not pd.isna(lat) and not pd.isna(lon):
+            point = Point(float(lon), float(lat))
+            
+            found = False
+            
+            for moughataa_id in range(len(geometry)):
+                moughataa = geometry[moughataa_id]
+                
+                if moughataa.contains(point):
+                    found = True
+                    matching_moughataa_id = moughataa_id
+                    break
+                
+            if found:
+                df.loc[i,"moughataa"] = moughataas[matching_moughataa_id]
+                df.loc[i,"wilaya"] =wilayas[matching_moughataa_id]
+    
+    return df

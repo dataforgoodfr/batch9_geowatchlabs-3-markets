@@ -114,11 +114,14 @@ def import_dataset(
         year_file = extract_year_from_filename(data_file_name)
         
         if year_file == '2012':
+
             if 'GPScoord' in data.columns:
                 
                 data['coord'] = data['GPScoord'].apply(clean_gps_coord)
                 data[['latitude','longitude']] = pd.DataFrame(data['coord'].apply(extract_lat_lon).tolist(), index=data.index)
-        
+                meta.column_names += ['latitude','longitude']
+                
+                
         if not meta is None:
             nb_valid_files += 1
 
@@ -146,6 +149,8 @@ def import_dataset(
                     target_columns,
                 )
             )
+    match = match.reset_index(drop=True)
+    match = fill_moughtaa_wilaya(match)
 
     match["year"] = match["Path"].apply(extract_year_from_filename)
     match["month"] = match["Path"].apply(extract_month_from_filename)
